@@ -1,10 +1,12 @@
-use ::bytes;
+use bytes;
 
-use ::std::fmt::{Write, Display};
-use ::std::borrow::Borrow;
-use ::std::io;
+use std::borrow::Borrow;
+use std::fmt::{Display, Write};
+use std::io;
 
-pub fn comma_delimited<T: Display + ?Sized, B: Borrow<T>, I: IntoIterator<Item=B>>(iter: I) -> String {
+pub fn comma_delimited<T: Display + ?Sized, B: Borrow<T>, I: IntoIterator<Item = B>>(
+    iter: I,
+) -> String {
     let mut iter = iter.into_iter();
     let mut ret = String::new();
     if let Some(b) = iter.next() {
@@ -37,7 +39,7 @@ impl BytesWriter {
     #[inline]
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            buf: bytes::BytesMut::with_capacity(capacity)
+            buf: bytes::BytesMut::with_capacity(capacity),
         }
     }
 

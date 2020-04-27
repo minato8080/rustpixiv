@@ -103,17 +103,15 @@
 //! * More versatile support for handling and parsing responses (instead of just the raw response)
 //! * More API support (although pixiv doesn't document their public API anywhere to my knowledge...)
 
+extern crate bytes;
 extern crate chrono;
+extern crate dotenv;
+pub extern crate http;
 #[cfg(feature = "reqwest-client")]
 pub extern crate reqwest;
-pub extern crate http;
 extern crate serde;
 extern crate serde_json;
 extern crate serde_urlencoded;
-extern crate bytes;
-
-#[cfg(test)]
-extern crate kankyo;
 
 use std::borrow::{Borrow, Cow};
 use std::collections::HashMap;
@@ -123,11 +121,11 @@ use std::io::Write;
 
 use chrono::naive::NaiveDate;
 
-pub use http::{HttpTryFrom, header, HeaderMap, Method, uri::Uri};
+pub use http::{header, uri::Uri, HeaderMap, HttpTryFrom, Method};
 
-mod utils;
 #[cfg(feature = "reqwest-client")]
 pub mod client;
+mod utils;
 
 use utils::comma_delimited;
 
@@ -350,11 +348,14 @@ impl PixivRequest {
             None => write!(buffer, "?{}", query),
         };
 
-        uri_parts.path_and_query = Some(http::uri::PathAndQuery::from_shared(buffer.into_inner().freeze()).expect("To create path and query"));
+        uri_parts.path_and_query = Some(
+            http::uri::PathAndQuery::from_shared(buffer.into_inner().freeze())
+                .expect("To create path and query"),
+        );
 
         self.url = match http::Uri::from_parts(uri_parts) {
             Ok(uri) => uri,
-            Err(error) => panic!("Unable to set query for URI: {}", error)
+            Err(error) => panic!("Unable to set query for URI: {}", error),
         };
 
         self
@@ -367,7 +368,10 @@ impl<'a> PixivRequestBuilder<'a> {
     pub fn new(method: Method, url: Uri, params: HashMap<&'a str, Cow<'a, str>>) -> Self {
         // set headers
         let mut headers = HeaderMap::new();
-        headers.insert(header::REFERER, header::HeaderValue::from_static("http://spapi.pixiv.net/"));
+        headers.insert(
+            header::REFERER,
+            header::HeaderValue::from_static("http://spapi.pixiv.net/"),
+        );
 
         PixivRequestBuilder {
             request: PixivRequest::new(method, url, headers),
@@ -487,11 +491,7 @@ impl<'a> PixivRequestBuilder<'a> {
     pub fn bad_words() -> Self {
         const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1.1/bad_words.json";
         let url = Uri::from_static(API_URL);
-        PixivRequestBuilder::new(
-            Method::GET,
-            url,
-            HashMap::default(),
-        )
+        PixivRequestBuilder::new(Method::GET, url, HashMap::default())
     }
     /// Used to build a request to retrieve information of a work.
     /// # Request Transforms
@@ -555,7 +555,8 @@ impl<'a> PixivRequestBuilder<'a> {
     /// * `publicity` (default: `public`)
     /// * `image_sizes` (default: `px_128x128,small,medium,large,px_480mw`)
     pub fn favorite_works() -> Self {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [
@@ -571,7 +572,8 @@ impl<'a> PixivRequestBuilder<'a> {
     /// # Request Transforms
     /// * `publicity` (default: `public`)
     pub fn favorite_work_add(work_id: usize) -> Self {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [("publicity", "public")];
@@ -590,7 +592,8 @@ impl<'a> PixivRequestBuilder<'a> {
         B: Borrow<usize>,
         I: IntoIterator<Item = B>,
     {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [("publicity", "public")];
@@ -609,7 +612,8 @@ impl<'a> PixivRequestBuilder<'a> {
     /// * `include_stats` (default: `true`)
     /// * `include_sanity_level` (default: `true`)
     pub fn following_works() -> Self {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/following/works.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/following/works.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [
@@ -641,7 +645,8 @@ impl<'a> PixivRequestBuilder<'a> {
     /// # Request Transforms
     /// * `publicity` (default: `public`)
     pub fn following_add(user_id: usize) -> Self {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/favorite-users.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/favorite-users.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [("publicity", "public")];
@@ -660,7 +665,8 @@ impl<'a> PixivRequestBuilder<'a> {
         B: Borrow<usize>,
         I: IntoIterator<Item = B>,
     {
-        const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/favorite-users.json";
+        const API_URL: &'static str =
+            "https://public-api.secure.pixiv.net/v1/me/favorite-users.json";
         let url = Uri::from_static(API_URL);
 
         let extra_params = [("publicity", "public")];
