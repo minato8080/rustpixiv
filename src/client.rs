@@ -1,12 +1,9 @@
-use std::collections::HashMap;
-
 use super::{AuthError, PixivRequest};
 use http::{header, status::StatusCode};
 use md5;
 use reqwest;
 use reqwest::{Client, Response};
 use serde_json::Value;
-use url::form_urlencoded;
 
 // This is taken from the Android app, don't worry about it. It's not really "compromisable", to some degree.
 const CLIENT_ID: &str = "MOBrBDS8blbauoSck0ZfDbtuzpyT";
@@ -36,15 +33,15 @@ impl Pixiv {
     }
     /// This is required to use all the other functions this library provides. Requires a valid username and password.
     pub fn login(&mut self, username: &str, password: &str) -> Result<(), AuthError> {
-        let mut data = HashMap::new();
+        let mut data = Vec::new();
 
-        data.insert("get_secure_url", "1");
-        data.insert("client_id", CLIENT_ID);
-        data.insert("client_secret", CLIENT_SECRET);
+        data.push(("get_secure_url", "1"));
+        data.push(("client_id", CLIENT_ID));
+        data.push(("client_secret", CLIENT_SECRET));
 
-        data.insert("grant_type", "password");
-        data.insert("username", username);
-        data.insert("password", password);
+        data.push(("grant_type", "password"));
+        data.push(("username", username));
+        data.push(("password", password));
 
         println!("data:{:#?}", data);
         let mut res = self
@@ -76,17 +73,18 @@ impl Pixiv {
 
         Ok(())
     }
+
     /// Refreshes the authentication. You should use this when your access token is close to expiring.
     pub fn refresh_auth(&mut self) -> Result<(), AuthError> {
         let refresh_clone = self.refresh_token.clone();
-        let mut data = HashMap::new();
+        let mut data = Vec::new();
 
-        data.insert("client_id", CLIENT_ID);
-        data.insert("client_secret", CLIENT_SECRET);
-        data.insert("get_secure_url", "1");
+        data.push(("client_id", CLIENT_ID));
+        data.push(("client_secret", CLIENT_SECRET));
+        data.push(("get_secure_url", "1"));
 
-        data.insert("grant_type", "refresh_token");
-        data.insert("refresh_token", refresh_clone.as_str());
+        data.push(("grant_type", "refresh_token"));
+        data.push(("refresh_token", refresh_clone.as_str()));
 
         let mut res = self
             .send_auth_request(&data)
@@ -151,10 +149,11 @@ impl Pixiv {
     }
 
     /// Private helper method
-    fn send_auth_request(&self, data: &HashMap<&str, &str>) -> Result<Response, reqwest::Error> {
+    fn send_auth_request(&self, data: &Vec<(&str, &str)>) -> Result<Response, reqwest::Error> {
         let client_time = self.get_current_time();
         let client_hash = self.get_client_hash(&client_time);
-        let data = form_urlencoded::Serializer::new(String::new())
+
+        let data = url::form_urlencoded::Serializer::new(String::new())
             .extend_pairs(data.iter())
             .finish();
 
