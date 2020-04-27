@@ -107,11 +107,13 @@ extern crate bytes;
 extern crate chrono;
 extern crate dotenv;
 pub extern crate http;
+pub extern crate md5;
 #[cfg(feature = "reqwest-client")]
 pub extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
 extern crate serde_urlencoded;
+extern crate url;
 
 use std::borrow::{Borrow, Cow};
 use std::collections::HashMap;

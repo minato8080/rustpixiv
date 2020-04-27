@@ -17,6 +17,8 @@ serde_urlencoded = "0.5"
 chrono = "0.4"
 log = "0.3"
 dotenv = "0.15.0"
+md5 = "0.7.0"
+url = "2.1.1"
 
 [features]
 default = ["reqwest-client"]
