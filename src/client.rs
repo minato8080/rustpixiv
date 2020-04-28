@@ -43,10 +43,10 @@ impl Pixiv {
     pub fn login(&mut self, username: &str, password: &str) -> Result<(), AuthError> {
         let mut data = std::collections::HashMap::new();
 
-        data.insert("get_secure_url", "1");
+        data.insert("get_secure_url", "true");
         data.insert("client_id", CLIENT_ID);
         data.insert("client_secret", CLIENT_SECRET);
-
+        data.insert("refresh_token", "");
         data.insert("grant_type", "password");
         data.insert("username", username);
         data.insert("password", password);
@@ -89,9 +89,10 @@ impl Pixiv {
 
         data.insert("client_id", CLIENT_ID);
         data.insert("client_secret", CLIENT_SECRET);
-        data.insert("get_secure_url", "1");
+        data.insert("get_secure_url", "true");
         data.insert("grant_type", "refresh_token");
         data.insert("refresh_token", refresh_clone.as_str());
+        data.insert("include_policy", "true");
 
         let mut res = self
             .send_auth_request(&data)
@@ -171,8 +172,14 @@ impl Pixiv {
         let req = self
             .client
             .post(AUTH_URL)
-            .header(X_CLIENT_TIME, client_time)
-            .header(X_CLIENT_HASH, client_hash)
+            .header(X_CLIENT_TIME, "2020-04-28T05:32:01+00:00")
+            .header(X_CLIENT_HASH, "6539b5248d3632af8145859c65831d26")
+            .header("accept-language", "en_US")
+            .header("host", "oauth.secure.pixiv.net")
+            .header("app-os", "android")
+            .header("app-os-version", "5.0.156")
+            .header("content-type", "application/x-www-form-urlencoded")
+            .header("accept-encoding", "gzip")
             .form(&data);
 
         println!("req:{:#?}", req);

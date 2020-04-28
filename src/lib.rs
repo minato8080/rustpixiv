@@ -14,9 +14,7 @@
 //! # use pixiv::client::Pixiv;
 //! # use reqwest::Client;
 //! # fn main() {
-//!     let client = Client::new();
-//!
-//!     let mut pixiv: Pixiv = Pixiv::new(&client);
+//!     let mut pixiv: Pixiv = Pixiv::new().unwrap();
 //!     pixiv.login("username", "password");
 //! # }
 //! ```
@@ -31,9 +29,7 @@
 //! # use pixiv::client::Pixiv;
 //! # use reqwest::Client;
 //! # fn main() {
-//!     let client = Client::new();
-//!
-//!     let mut pixiv: Pixiv = Pixiv::new(&client);
+//!     let mut pixiv: Pixiv = Pixiv::new().unwrap();
 //!
 //!     let my_access_token = String::from("supersecret");
 //!     *pixiv.access_token_mut() = my_access_token;
@@ -55,8 +51,7 @@
 //! # use reqwest::Client;
 //! # use serde_json::Value;
 //! # fn main() {
-//! #   let client = Client::new();
-//! #   let mut pixiv: Pixiv = Pixiv::new(&client);
+//! #   let mut pixiv: Pixiv = Pixiv::new().unwrap();
 //! #   pixiv.login("username", "password");
 //!     let request = PixivRequestBuilder::work(66024340).build();
 //!     let work: Value = pixiv
@@ -78,8 +73,7 @@
 //! # use reqwest::Client;
 //! # use serde_json::Value;
 //! # fn main() {
-//! #   let client = Client::new();
-//! #   let mut pixiv: Pixiv = Pixiv::new(&client);
+//! #   let mut pixiv: Pixiv = Pixiv::new().unwrap();
 //! #   pixiv.login("username", "password");
 //!     let request = PixivRequestBuilder::following_works()
 //!        .image_sizes(&["large"])
