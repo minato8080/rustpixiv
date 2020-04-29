@@ -23,7 +23,7 @@ pub struct Pixiv {
 
 impl Pixiv {
     /// Creates a new Pixiv struct.
-    #[inline]
+
     pub fn new() -> Result<Pixiv, reqwest::Error> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
@@ -51,7 +51,6 @@ impl Pixiv {
         data.insert("username", username);
         data.insert("password", password);
 
-        println!("data:{:#?}", data);
         let mut res = self
             .send_auth_request(&data)
             .expect("Error occured while requesting token.");
@@ -123,25 +122,25 @@ impl Pixiv {
     }
 
     /// Get the access token.
-    #[inline]
+
     pub fn access_token(&self) -> &String {
         &self.access_token
     }
 
     /// Get a mutable reference to the access token.
-    #[inline]
+
     pub fn access_token_mut(&mut self) -> &mut String {
         &mut self.access_token
     }
 
     /// Get the refresh token.
-    #[inline]
+
     pub fn refresh_token(&self) -> &String {
         &self.refresh_token
     }
 
     /// Get a mutable reference to the refresh token.
-    #[inline]
+
     pub fn refresh_token_mut(&mut self) -> &mut String {
         &mut self.refresh_token
     }
@@ -164,15 +163,11 @@ impl Pixiv {
         let client_time = self.get_current_time();
         let client_hash = self.get_client_hash(&client_time);
 
-        println!(
-            "client-time:{}\nclient-hash:{}\ndata:{:#?}",
-            client_time, client_hash, data
-        );
-
-        let req = self
+        let var_name = self
             .client
             .post(AUTH_URL)
-            .header(X_CLIENT_TIME, client_time)
+            .header(X_CLIENT_TIME, client_time);
+        let req = var_name
             .header(X_CLIENT_HASH, client_hash)
             .header("accept-language", "en_US")
             .header("host", "oauth.secure.pixiv.net")
@@ -181,8 +176,6 @@ impl Pixiv {
             .header("content-type", "application/x-www-form-urlencoded")
             .header("accept-encoding", "gzip")
             .form(&data);
-
-        println!("req:{:#?}", req);
         req.send()
     }
 
@@ -214,8 +207,6 @@ mod tests {
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-        println!("username:{}\npassword:{}", username, password);
-
         pixiv.login(&username, &password).expect("Failed to log in");
     }
 
@@ -227,8 +218,6 @@ mod tests {
 
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
-
-        println!("username:{}\npassword:{}", username, password);
 
         pixiv
             .login(&username, &password)
@@ -247,8 +236,6 @@ mod tests {
 
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
-
-        println!("username:{}\npassword:{}", username, password);
 
         pixiv
             .login(&username, &password)
@@ -273,8 +260,6 @@ mod tests {
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-        println!("username:{}\npassword:{}", username, password);
-
         pixiv
             .login(&username, &password)
             .expect("Failed to log in.");
@@ -297,8 +282,6 @@ mod tests {
 
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
-
-        println!("username:{}\npassword:{}", username, password);
 
         pixiv
             .login(&username, &password)
@@ -323,8 +306,6 @@ mod tests {
         let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
         let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-        println!("username:{}\npassword:{}", username, password);
-
         pixiv.login(&username, &password).expect("Failed to log in");
 
         let request = PixivRequestBuilder::following_works()
@@ -335,6 +316,27 @@ mod tests {
             .execute(request)
             .expect("Request failed.")
             .json()
+            .expect("Failed to parse as json.");
+
+        println!("{}", following_works);
+    }
+
+    #[test]
+    fn test_fetching_illustration() {
+        dotenv::dotenv().ok();
+
+        let mut pixiv: Pixiv = Pixiv::new().unwrap();
+
+        let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
+        let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
+
+        pixiv.login(&username, &password).expect("Failed to log in");
+
+        let request = PixivRequestBuilder::illustration(75523989).build();
+        let following_works = pixiv
+            .execute(request)
+            .expect("Request failed.")
+            .text()
             .expect("Failed to parse as json.");
 
         println!("{}", following_works);
