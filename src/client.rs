@@ -148,7 +148,7 @@ impl Pixiv {
 
     /// Get current UTC time as a `String`.
     fn get_current_time(&self) -> String {
-        chrono::offset::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, false)
+        chrono::offset::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, false)
     }
 
     /// Get the client's MD5 hash.
@@ -172,8 +172,8 @@ impl Pixiv {
         let req = self
             .client
             .post(AUTH_URL)
-            .header(X_CLIENT_TIME, "2020-04-28T05:32:01+00:00")
-            .header(X_CLIENT_HASH, "6539b5248d3632af8145859c65831d26")
+            .header(X_CLIENT_TIME, client_time)
+            .header(X_CLIENT_HASH, client_hash)
             .header("accept-language", "en_US")
             .header("host", "oauth.secure.pixiv.net")
             .header("app-os", "android")
