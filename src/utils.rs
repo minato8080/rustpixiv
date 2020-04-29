@@ -26,11 +26,6 @@ pub(crate) struct BytesWriter {
 }
 
 impl BytesWriter {
-    //#[inline]
-    //pub fn new() -> Self {
-    //    Self::with_capacity(DEFAULT_CAPACITY)
-    //}
-
     #[inline]
     pub fn with_smol_capacity() -> Self {
         Self::with_capacity(SMOL_CAPCITY)
