@@ -1,109 +1,9 @@
-//! # pixiv
-//!
-//! The `pixiv` crate provides an unofficial library for the Pixiv API.
-//!
-//! This crate uses the crates `reqwest` and `serde_json`.
-//!
-//! ## Authentication
-//!
-//! To authenticate, you need to create a new `Pixiv` struct and pass in a `reqwest::Client`, then login with your username and password.
-//!
-//! ```rust,no_run
-//! # extern crate pixiv;
-//! # extern crate reqwest;
-//! # use pixiv::client::Pixiv;
-//! # use reqwest::Client;
-//! # fn main() {
-//!     let mut pixiv: Pixiv = Pixiv::new().unwrap();
-//!     pixiv.login("username", "password");
-//! # }
-//! ```
-//!
-//! If and when your access token does expire, you should use the `refresh_auth()` or `login()` methods.
-//!
-//! Alternatively, if you have your access token and/or request token cached somwhere for you to reuse:
-//!
-//! ```rust,no_run
-//! # extern crate pixiv;
-//! # extern crate reqwest;
-//! # use pixiv::client::Pixiv;
-//! # use reqwest::Client;
-//! # fn main() {
-//!     let mut pixiv: Pixiv = Pixiv::new().unwrap();
-//!
-//!     let my_access_token = String::from("supersecret");
-//!     *pixiv.access_token_mut() = my_access_token;
-//! # }
-//! ```
-//!
-//! Accessor methods such as `access_token()` and `refresh_token()` are provided for these purposes.
-//!
-//! ## Making a Request
-//!
-//! This crate relies on the builder pattern for using and modifying a request. A typical request may look like this:
-//!
-//! ```rust,no_run
-//! # extern crate pixiv;
-//! # extern crate reqwest;
-//! # extern crate serde_json;
-//! # use pixiv::client::Pixiv;
-//! # use pixiv::PixivRequestBuilder;
-//! # use reqwest::Client;
-//! # use serde_json::Value;
-//! # fn main() {
-//! #   let mut pixiv: Pixiv = Pixiv::new().unwrap();
-//! #   pixiv.login("username", "password");
-//!     let request = PixivRequestBuilder::work(66024340).build();
-//!     let work: Value = pixiv
-//!         .execute(request)
-//!         .expect("Request failed.")
-//!         .json()
-//!         .expect("Failed to parse as json.");
-//! # }
-//! ```
-//!
-//! A more complicated response may look like this:
-//!
-//! ```rust,no_run
-//! # extern crate pixiv;
-//! # extern crate reqwest;
-//! # extern crate serde_json;
-//! # use pixiv::client::Pixiv;
-//! # use pixiv::PixivRequestBuilder;
-//! # use reqwest::Client;
-//! # use serde_json::Value;
-//! # fn main() {
-//! #   let mut pixiv: Pixiv = Pixiv::new().unwrap();
-//! #   pixiv.login("username", "password");
-//!     let request = PixivRequestBuilder::following_works()
-//!        .image_sizes(&["large"])
-//!        .include_sanity_level(false)
-//!        .build();
-//!     let following_works: Value = pixiv
-//!        .execute(request)
-//!        .expect("Request failed.")
-//!        .json()
-//!        .expect("Failed to parse as json.");
-//! # }
-//! ```
-//!
-//! Since `work` is of type `serde_json::Value`, it's up to you to figure out how you want to parse this response for your program.
-//!
-//! You may want to refer [here](https://www.snip2code.com/Snippet/798193/Unofficial-API-specification-extracted-f) for what a response from Pixiv may look like.
-//!
-//! ## Future Support (Maybe)
-//!
-//! * More examples!
-//! * More versatile support for handling and parsing responses (instead of just the raw response)
-//! * More API support (although pixiv doesn't document their public API anywhere to my knowledge...)
-
 extern crate bytes;
 extern crate chrono;
 extern crate dotenv;
-pub extern crate http;
-pub extern crate md5;
-#[cfg(feature = "reqwest-client")]
-pub extern crate reqwest;
+extern crate http;
+extern crate md5;
+extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
 extern crate serde_urlencoded;
@@ -117,10 +17,9 @@ use std::io::Write;
 
 use chrono::naive::NaiveDate;
 
-pub use http::{header, uri::Uri, HeaderMap, HttpTryFrom, Method};
+use http::{header, uri::Uri, HeaderMap, HttpTryFrom, Method};
 
-#[cfg(feature = "reqwest-client")]
-pub mod client;
+mod client;
 mod utils;
 
 use utils::comma_delimited;
