@@ -344,7 +344,7 @@ mod tests {
             .expect("Failed to parse as json.")
             .into_inner();
 
-        illustration.download(&pixiv.client);
+        illustration.download(&pixiv.client, &std::env::current_dir().unwrap());
         println!("{:#?}", illustration);
     }
 

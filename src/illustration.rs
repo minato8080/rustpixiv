@@ -104,15 +104,14 @@ pub struct Illustration {
     total_comments: u32,
     total_view: u32,
     #[serde(rename = "type")]
-    types: ContentType, // This should be an enum
+    content_type: ContentType, // This should be an enum
     user: User,
     visible: bool,
     x_restrict: u32,
 }
 
 impl Illustration {
-    pub fn download(&self, client: &reqwest::Client) {
-        let path = std::env::current_dir().unwrap();
+    pub fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
         self.image_urls
             .clone()
             .into_iter()
@@ -131,6 +130,7 @@ impl Illustration {
                     .send();
                 let mut response = response.unwrap();
                 let mut dest = {
+                    println!("response_url:{}", response.url());
                     let fname = response
                         .url()
                         .path_segments()

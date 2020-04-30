@@ -767,7 +767,6 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         println!("uri:{}", uri);
         let uri = Uri::from_shared(bytes).unwrap();
-
         let extra_params = [("illust_id", illust_id.to_string())];
         let params = extra_params.iter().map(|(k, v)| (*k, v.into())).collect();
         PixivRequestBuilder::new(Method::GET, uri, params)
