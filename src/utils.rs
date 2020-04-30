@@ -26,11 +26,6 @@ pub(crate) struct BytesWriter {
 }
 
 impl BytesWriter {
-    //
-    //pub fn new() -> Self {
-    //    Self::with_capacity(DEFAULT_CAPACITY)
-    //}
-
     pub fn with_smol_capacity() -> Self {
         Self::with_capacity(SMOL_CAPCITY)
     }
@@ -44,28 +39,6 @@ impl BytesWriter {
     pub fn into_inner(self) -> bytes::BytesMut {
         self.buf
     }
-
-    //
-    //pub fn freeze(&mut self) -> bytes::Bytes {
-    //    mem::replace(&mut self.buf, bytes::BytesMut::new()).freeze()
-    //}
-
-    //
-    //pub fn len(&self) -> usize {
-    //    self.buf.len()
-    //}
-
-    //
-    //pub fn split_off(&mut self, at: usize) -> Self {
-    //    Self {
-    //        buf: self.buf.split_off(at)
-    //    }
-    //}
-
-    //
-    //pub fn reserve(&mut self, add: usize) {
-    //    self.buf.reserve(add);
-    //}
 }
 
 impl io::Write for BytesWriter {

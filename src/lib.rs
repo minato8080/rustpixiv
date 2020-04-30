@@ -12,13 +12,14 @@ extern crate url;
 use bytes::Bytes;
 use chrono::naive::NaiveDate;
 use http::{header, uri::Uri, HeaderMap, HttpTryFrom, Method};
-use std::borrow::{Borrow, Cow};
+use std::borrow::Borrow;
 use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 use std::io::Write;
 
 mod client;
+mod illustration;
 mod utils;
 
 use utils::comma_delimited;

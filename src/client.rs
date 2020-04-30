@@ -1,7 +1,9 @@
+use super::illustration::Illustration;
 use super::{AuthError, PixivRequest};
 use http::{header, status::StatusCode};
 use md5;
 use reqwest::{Client, ClientBuilder, Response};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 // This is taken from the Android app, don't worry about it. It's not really "compromisable", to some degree.
@@ -194,6 +196,7 @@ impl Pixiv {
 #[cfg(test)]
 mod tests {
     use super::Pixiv;
+    use serde::{Deserialize, Serialize};
     use serde_json::Value;
 
     use super::super::*;
@@ -333,13 +336,16 @@ mod tests {
         pixiv.login(&username, &password).expect("Failed to log in");
 
         let request = PixivRequestBuilder::illustration(75523989).build();
-        let following_works = pixiv
+
+        let illustration = pixiv
             .execute(request)
             .expect("Request failed.")
-            .text()
-            .expect("Failed to parse as json.");
+            .json::<illustration::IllustrationProxy>()
+            .expect("Failed to parse as json.")
+            .into_inner();
 
-        println!("{}", following_works);
+        illustration.download(&pixiv.client);
+        println!("{:#?}", illustration);
     }
 
     #[test]
