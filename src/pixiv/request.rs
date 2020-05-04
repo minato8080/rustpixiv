@@ -1,6 +1,6 @@
 use crate::utils::BytesWriter;
 
-use http::{header, uri::Uri, HeaderMap, HttpTryFrom, Method};
+use http::{uri::Uri, HeaderMap, Method};
 
 use std::io::Write;
 

@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::fmt;
-use std::io::Write;
 
 /// Error returned on failure to authorize with pixiv.
 #[derive(Debug)]
