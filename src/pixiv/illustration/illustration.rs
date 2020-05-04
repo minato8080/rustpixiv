@@ -1,82 +1,12 @@
+use crate::constants::BASE_URL;
+use crate::enums::ContentType;
+use crate::pixiv::helper_structs::image_url::ImageUrl;
+use crate::pixiv::illustration::illustration_search_param::IllustrationSeachParam;
+use crate::pixiv::illustration::single_page_meta::SinglePageMeta;
+use crate::pixiv::illustration::tag::Tag;
+use crate::pixiv::user::User;
+
 use serde::{Deserialize, Serialize};
-
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct ImageUrl {
-    pub large: Option<String>,
-    pub medium: Option<String>,
-    pub small: Option<String>,
-    pub square_medium: Option<String>,
-}
-
-impl IntoIterator for ImageUrl {
-    type Item = String;
-    type IntoIter = ImageUrlIterator;
-
-    fn into_iter(self) -> Self::IntoIter {
-        ImageUrlIterator {
-            url: self,
-            index: 0,
-        }
-    }
-}
-
-pub struct ImageUrlIterator {
-    url: ImageUrl,
-    index: usize,
-}
-
-impl Iterator for ImageUrlIterator {
-    type Item = String;
-    fn next(&mut self) -> Option<Self::Item> {
-        loop {
-            let result = match self.index {
-                0 => self.url.small.take(),
-                1 => self.url.medium.take(),
-                2 => self.url.large.take(),
-                3 => self.url.square_medium.take(),
-                _ => return None,
-            };
-            self.index += 1;
-
-            if let Some(r) = result {
-                return Some(r);
-            }
-        }
-    }
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-struct SinglePageMeta {
-    original_image_url: String,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-struct Tag {
-    name: String,
-    translated_name: Option<Vec<String>>,
-}
-
-/// The user who worked on the illustration (the artist).
-#[derive(Deserialize, Serialize, Debug)]
-struct User {
-    account: String,
-    id: u32,
-    is_followed: bool,
-    name: String,
-    profile_image_urls: ImageUrl,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-enum ContentType {
-    #[serde(rename = "illust")]
-    Illustration,
-    #[serde(rename = "manga")]
-    Manga,
-    #[serde(rename = "ugoira")]
-    Ugoira,
-    #[serde(rename = "novel")]
-    Novel,
-}
 
 /// Struct representations of a Pixiv illustration.
 /// TODO: We need to verify this struct, handles nullable types (possibly introduce a default value)
@@ -105,17 +35,32 @@ pub struct Illustration {
     total_view: u32,
     #[serde(rename = "type")]
     content_type: ContentType, // This should be an enum
+    // TODO: This should be borrowed?
     user: User,
     visible: bool,
     x_restrict: u32,
 }
 
 impl Illustration {
+    pub fn search(&self, client: &reqwest::Client, _params: IllustrationSeachParam) {
+        let target = reqwest::Url::parse(&format!("{}/v1/search/illust", BASE_URL)).unwrap();
+        let _response = client
+            .request(http::Method::GET, target)
+            .header(
+                reqwest::header::REFERER,
+                format!(
+                    "https://www.pixiv.net/member_illust.php?mode=medium&illust_id={}",
+                    self.id
+                ),
+            )
+            .send();
+    }
+
     pub fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
         self.image_urls
             .clone()
             .into_iter()
-            .map(|str| reqwest::Url::parse(&str))
+            .map(|url| reqwest::Url::parse(&url))
             .filter_map(Result::ok)
             .for_each(|target: reqwest::Url| {
                 let response = client
