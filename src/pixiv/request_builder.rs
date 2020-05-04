@@ -1,5 +1,6 @@
 use crate::constants::BASE_URL;
 use crate::enums::{Publicity, RankingMode, RankingType, SearchMode, SearchOrder, SearchPeriod};
+use crate::pixiv::helper_structs::illustration::illustration_search_param::IllustrationSearchParam;
 use crate::pixiv::request::PixivRequest;
 use crate::utils::comma_delimited;
 
@@ -285,6 +286,24 @@ impl PixivRequestBuilder {
             ("include_sanity_level", "true"),
         ];
         let params = extra_params.iter().map(|&(k, v)| (k, v.into())).collect();
+        PixivRequestBuilder::new(Method::GET, url, params)
+    }
+
+    pub fn search_illustration<T>(params: T) -> Self
+    where
+        T: Into<IllustrationSearchParam>,
+    {
+        let url = http::Uri::try_from(format!("{}/v1/search/illust", BASE_URL)).unwrap();
+        println!("url:{:#?}", url);
+        let params = params
+            .into()
+            .into_iter()
+            .map(|(k, v)| {
+                println!("k:{} v:{}", k, v);
+                (k, v)
+            })
+            .collect();
+        println!("params:{:#?}", params);
         PixivRequestBuilder::new(Method::GET, url, params)
     }
 

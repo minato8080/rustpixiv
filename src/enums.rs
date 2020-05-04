@@ -1,10 +1,25 @@
 use serde::{Deserialize, Serialize};
 
 // TODO: Specificy how serde should deserialize these...
+#[derive(Deserialize, Serialize, Debug)]
 pub enum SearchTarget {
     TagsPartial,
     TagsExact,
     TitleAndCaption,
+}
+
+impl SearchTarget {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            SearchTarget::TagsPartial => "partial_match_for_tags",
+            SearchTarget::TagsExact => "exact_match_for_tags",
+            SearchTarget::TitleAndCaption => "title_and_caption",
+        }
+    }
+
+    pub fn map<U, F: FnOnce(Self) -> U>(self, f: F) -> U {
+        f(self)
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -143,6 +158,39 @@ impl SearchOrder {
         match *self {
             SearchOrder::Descending => "desc",
             SearchOrder::Ascending => "asc",
+        }
+    }
+}
+
+/// Enum to sort search result.
+#[derive(Deserialize, Serialize, Debug)]
+pub enum SearchSort {
+    DateAscending,
+    DateDescending,
+}
+
+impl SearchSort {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            SearchSort::DateAscending => "date_asc",
+            SearchSort::DateDescending => "date_desc",
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub enum Duration {
+    LastDay,
+    LastWeek,
+    LastMonth,
+}
+
+impl Duration {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            Duration::LastDay => "within_last_day",
+            Duration::LastWeek => "within_last_week",
+            Duration::LastMonth => "within_last_month",
         }
     }
 }

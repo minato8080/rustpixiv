@@ -1,5 +1,5 @@
 use pixiv::pixiv::client::Pixiv;
-use pixiv::pixiv::illustration::illustration::IllustrationProxy;
+
 use pixiv::pixiv::request_builder::PixivRequestBuilder;
 
 use serde_json::Value;
@@ -128,33 +128,8 @@ fn test_following_works() {
 }
 
 #[test]
-fn test_fetching_illustration() {
-    dotenv::dotenv().ok();
-
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
-
-    let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
-    let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
-
-    pixiv.login(&username, &password).expect("Failed to log in");
-
-    let request = PixivRequestBuilder::illustration(75523989).build();
-
-    let illustration = pixiv
-        .execute(request)
-        .expect("Request failed.")
-        .json::<IllustrationProxy>()
-        .expect("Failed to parse as json.")
-        .into_inner();
-
-    illustration.download(&pixiv.client, &std::env::current_dir().unwrap());
-    println!("{:#?}", illustration);
-}
-
-#[test]
 #[should_panic]
 fn test_login_fail() {
     let mut pixiv: Pixiv = Pixiv::new().unwrap();
-
     pixiv.login("", "").expect("Failed to log in.");
 }
