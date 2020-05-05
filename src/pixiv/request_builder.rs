@@ -1,4 +1,5 @@
 use crate::constants::BASE_URL;
+use crate::enums::Filter;
 use crate::enums::Visibility;
 use crate::enums::{Publicity, RankingMode, RankingType, SearchMode, SearchOrder, SearchPeriod};
 use crate::pixiv::helper_structs::illustration::illustration_search_param::IllustrationSearchParam;
@@ -501,6 +502,16 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         let params = argument.build();
+        PixivRequestBuilder::new(Method::GET, uri, params)
+    }
+
+    /// TODO: Documentation
+    pub fn request_trending_tags() -> Self {
+        let uri = format!("{}/v1/trending-tags/illust", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        let mut params = std::collections::HashMap::new();
+        params.insert("filter", Filter::ForiOS.as_str().to_string());
         PixivRequestBuilder::new(Method::GET, uri, params)
     }
 

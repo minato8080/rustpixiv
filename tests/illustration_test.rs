@@ -7,6 +7,7 @@ use pixiv::pixiv::helper_structs::illustration::recommended_illustration::Recomm
 use pixiv::pixiv::helper_structs::illustration::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
 use pixiv::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
 use pixiv::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
+use pixiv::pixiv::helper_structs::illustration::trending_illustrations::TrendingIllustrations;
 use pixiv::pixiv::request_builder::PixivRequestBuilder;
 
 #[test]
@@ -158,5 +159,25 @@ fn test_fetch_illustration_recommendations() {
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<IllustrationRanking>()
+        .expect("Failed to parse as json.");
+}
+
+#[test]
+fn test_fetch_trending_illustrations() {
+    dotenv::dotenv().ok();
+
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
+
+    let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
+    let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
+
+    pixiv.login(&username, &password).expect("Failed to log in");
+
+    let request = PixivRequestBuilder::request_trending_tags().build();
+
+    let result = pixiv
+        .execute_with_auth(request)
+        .expect("Request failed.")
+        .json::<TrendingIllustrations>()
         .expect("Failed to parse as json.");
 }
