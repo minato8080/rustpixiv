@@ -2,7 +2,8 @@ use crate::constants::BASE_URL;
 use crate::enums::Visibility;
 use crate::enums::{Publicity, RankingMode, RankingType, SearchMode, SearchOrder, SearchPeriod};
 use crate::pixiv::helper_structs::illustration::illustration_search_param::IllustrationSearchParam;
-use crate::pixiv::helper_structs::illustration::req_rec_illust_builder::ReqRecIllustArg;
+use crate::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
+use crate::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
 use crate::pixiv::request::PixivRequest;
 use crate::utils::comma_delimited;
 
@@ -83,8 +84,8 @@ impl PixivRequestBuilder {
             self.raw_param("include_stats", "false")
         }
     }
-    /// Sets the `include_sanity_level` param.
 
+    /// Sets the `include_sanity_level` param.
     pub fn include_sanity_level(self, value: bool) -> Self {
         if value {
             self.raw_param("include_sanity_level", "true")
@@ -92,11 +93,12 @@ impl PixivRequestBuilder {
             self.raw_param("include_sanity_level", "false")
         }
     }
-    /// Sets the ranking mode in the case of a `ranking()` call. Must be a value of enum `RankingMode`.
 
+    /// Sets the ranking mode in the case of a `ranking()` call. Must be a value of enum `RankingMode`.
     pub fn ranking_mode(self, value: RankingMode) -> Self {
         self.raw_param("mode", value.as_str())
     }
+
     /// Sets the `date` param. Must be a valid date in the form of `%Y-%m-%d`, e.g. `2018-2-22`.
     pub fn date<V>(self, value: V) -> Self
     where
@@ -107,21 +109,22 @@ impl PixivRequestBuilder {
         NaiveDate::parse_from_str(&*value, "%Y-%m-%d").expect("Invalid date or format given.");
         self.raw_param("date", value)
     }
-    /// Sets the `period` param in the case of a `search_works()` call. Must be a value of enum `SearchPeriod`.
 
+    /// Sets the `period` param in the case of a `search_works()` call. Must be a value of enum `SearchPeriod`.
     pub fn search_period(self, value: SearchPeriod) -> Self {
         self.raw_param("period", value.as_str())
     }
-    /// Sets the `mode` param in the case of a `search_works()` call. Must be a value of enum `SearchMode`.
 
+    /// Sets the `mode` param in the case of a `search_works()` call. Must be a value of enum `SearchMode`.
     pub fn search_mode(self, value: SearchMode) -> Self {
         self.raw_param("mode", value.as_str())
     }
-    /// Sets the `order` param in the case of a `search_works()` call. Must be a value of enum `SearchOrder`.
 
+    /// Sets the `order` param in the case of a `search_works()` call. Must be a value of enum `SearchOrder`.
     pub fn search_order(self, value: SearchOrder) -> Self {
         self.raw_param("order", value.as_str())
     }
+
     /// Sets the `sort` param in the case of a `search_works()` call. Not sure if there's any variations here, but this function is included for convenience.
     pub fn search_sort<V>(self, value: V) -> Self
     where
@@ -129,11 +132,13 @@ impl PixivRequestBuilder {
     {
         self.raw_param("sort", value)
     }
-    /// Sets the `types` param in the case of a `search_works()` call. Available values: `illustration`, `manga`, `ugoira`.
 
+    /// Sets the `types` param in the case of a `search_works()` call. Available values: `illustration`, `manga`, `ugoira`.
     pub fn search_types(self, values: &[&str]) -> Self {
         self.raw_param("types", comma_delimited::<&str, _, _>(values))
     }
+
+    // TODO: Add documentation.
     fn raw_param<V>(mut self, key: &'static str, value: V) -> Self
     where
         V: Into<String>,
@@ -476,13 +481,26 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_recommended_illustration<T>(argument: T) -> Self
     where
-        T: Into<ReqRecIllustArg>,
+        T: Into<IllustRecArg>,
     {
-        let argument: ReqRecIllustArg = argument.into();
+        let argument = argument.into();
         let uri = format!("{}/v1/illust/recommended", BASE_URL);
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
-        let params = argument.build_params();
+        let params = argument.build();
+        PixivRequestBuilder::new(Method::GET, uri, params)
+    }
+
+    /// TODO: Documentation
+    pub fn request_illustration_ranking<T>(argument: T) -> Self
+    where
+        T: Into<IllustRankingArg>,
+    {
+        let argument = argument.into();
+        let uri = format!("{}/v1/illust/ranking", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        let params = argument.build();
         PixivRequestBuilder::new(Method::GET, uri, params)
     }
 

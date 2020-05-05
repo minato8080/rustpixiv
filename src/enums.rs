@@ -82,37 +82,37 @@ impl RankingType {
 }
 
 /// Enum to set ranking mode param.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum RankingMode {
+    #[serde(rename = "day")]
     Daily,
+    #[serde(rename = "week")]
     Weekly,
+    #[serde(rename = "month")]
     Monthly,
-    Rookie,
-    Original,
-    Male,
-    Female,
-    DailyR18,
-    WeeklyR18,
-    MaleR18,
-    FemaleR18,
-    R18G,
+    #[serde(rename = "day_male")]
+    DayMale,
+    #[serde(rename = "day_female")]
+    DayFemale,
+    #[serde(rename = "week_original")]
+    WeekOriginal,
+    #[serde(rename = "week_rookie")]
+    WeekRookie,
+    #[serde(rename = "day_manga")]
+    DayManga,
 }
 
 impl RankingMode {
     pub fn as_str(&self) -> &'static str {
         match *self {
-            RankingMode::Daily => "daily",
-            RankingMode::Weekly => "weekly",
-            RankingMode::Monthly => "monthly",
-            RankingMode::Rookie => "rookie",
-            RankingMode::Original => "original",
-            RankingMode::Male => "male",
-            RankingMode::Female => "female",
-            RankingMode::DailyR18 => "daily_r18",
-            RankingMode::WeeklyR18 => "weekly_r18",
-            RankingMode::MaleR18 => "male_r18",
-            RankingMode::FemaleR18 => "female_r18",
-            RankingMode::R18G => "r18g",
+            RankingMode::Daily => "day",
+            RankingMode::Weekly => "week",
+            RankingMode::Monthly => "month",
+            RankingMode::DayMale => "day_male",
+            RankingMode::DayFemale => "day_female",
+            RankingMode::WeekOriginal => "week_original",
+            RankingMode::WeekRookie => "week_rookie",
+            RankingMode::DayManga => "day_manga",
         }
     }
 }
@@ -228,6 +228,19 @@ impl From<bool> for Visibility {
         match x {
             true => Visibility::Public,
             false => Visibility::Private,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum Filter {
+    ForiOS,
+}
+
+impl Filter {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            Filter::ForiOS => "for_ios",
         }
     }
 }
