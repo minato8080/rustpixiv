@@ -2,6 +2,7 @@ use pixiv::pixiv::client::PixivClient;
 use pixiv::pixiv::helper_structs::illustration::illustration_comment::IllustrationComment;
 use pixiv::pixiv::helper_structs::illustration::illustration_proxy::IllustrationProxy;
 use pixiv::pixiv::helper_structs::illustration::illustration_search_proxy::IllustrationSearchProxy;
+use pixiv::pixiv::helper_structs::illustration::recommended_illustration::RecommendedIllustration;
 use pixiv::pixiv::helper_structs::illustration::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
 use pixiv::pixiv::helper_structs::illustration::req_rec_illust_builder::ReqRecIllustArgBuilder;
 use pixiv::pixiv::request_builder::PixivRequestBuilder;
@@ -136,7 +137,7 @@ fn test_fetch_recommended_illustrations() {
     let result = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
-        .json::<serde_json::Value>()
+        .json::<RecommendedIllustration>()
         .expect("Failed to parse as json.");
 
     println!("result:{:#?}", result);

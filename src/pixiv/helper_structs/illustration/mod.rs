@@ -5,6 +5,7 @@ pub mod illustration_proxy;
 pub mod illustration_search_param;
 pub mod illustration_search_proxy;
 pub mod meta_page;
+pub mod recommended_illustration;
 pub mod related_illustration_search_proxy;
 pub mod req_rec_illust_builder;
 pub mod series;
