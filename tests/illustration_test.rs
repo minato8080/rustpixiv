@@ -19,7 +19,7 @@ fn test_fetching_illustration() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration(75523989).build();
 
@@ -43,7 +43,7 @@ fn test_search_illustration() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_search("Pretty Cure").build();
 
@@ -65,7 +65,7 @@ fn test_fetch_illustration_comments() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_comments(75523989, 0, false).build();
 
@@ -87,7 +87,7 @@ fn test_fetch_related_illustrations() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_related_illustration(75523989, 0).build();
 
@@ -107,7 +107,7 @@ fn test_fetch_illustrations_by_followed_artists() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_following(true).build();
 
@@ -127,7 +127,7 @@ fn test_fetch_recommended_illustrations() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let args = IllustRecArg::default();
 
@@ -149,7 +149,7 @@ fn test_fetch_illustration_recommendations() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let args = IllustRankingArg::default();
 
@@ -171,11 +171,11 @@ fn test_fetch_trending_illustrations() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_trending_tags().build();
 
-    let result = pixiv
+    let _result = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<TrendingIllustrations>()

@@ -12,7 +12,7 @@ fn test_login() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 }
 
 #[test]
@@ -111,7 +111,7 @@ fn test_following_works() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in");
+    pixiv.login(&username, &password).expect("Failed to log in.");
 
     let request = PixivRequestBuilder::following_works()
         .image_sizes(&["large"])

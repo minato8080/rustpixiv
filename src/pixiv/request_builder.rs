@@ -547,8 +547,8 @@ impl PixivRequestBuilder {
         PixivRequestBuilder::new(Method::GET, uri, params)
     }
 
-    /// Returns a `PixivRequest` which can be inspected and/or executed with `PixivClient::execute_with_auth()`.
-
+    /// TODO: Consider deprecating this?
+    /// We can also return 2 different variant of PixivRequest: NeedAuth or NoAuth
     pub fn build(self) -> PixivRequest {
         self.request.set_query_params(&self.params)
     }
