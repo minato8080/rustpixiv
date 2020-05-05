@@ -66,6 +66,7 @@ impl PixivClient {
             }
         }
 
+        // TODO: Figure out the correct struct for this
         let mut json_response: Value = res.json().unwrap();
 
         self.access_token = match json_response["response"]["access_token"].take() {
