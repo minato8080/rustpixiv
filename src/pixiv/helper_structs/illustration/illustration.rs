@@ -1,6 +1,7 @@
 use crate::enums::ContentType;
-use crate::pixiv::client::Pixiv;
+
 use crate::pixiv::helper_structs::illustration::meta_page::MetaPage;
+use crate::pixiv::helper_structs::illustration::series::Series;
 use crate::pixiv::helper_structs::illustration::single_page_meta::SingleMetaPage;
 use crate::pixiv::helper_structs::illustration::tag::Tag;
 use crate::pixiv::helper_structs::image_url::ImageUrl;
@@ -8,7 +9,7 @@ use crate::pixiv::user::User;
 
 use serde::{Deserialize, Serialize};
 
-/// Struct representations of a Pixiv illustration.
+/// Struct representations of a PixivClient illustration.
 /// TODO: We need to verify this struct, handles nullable types (possibly introduce a default value)
 /// and maybe stuffs that are not known (i.e. we have not encountered that property)
 #[derive(Deserialize, Serialize, Debug)]
@@ -26,7 +27,7 @@ pub struct Illustration {
     page_count: u32,
     restrict: u32,
     sanity_level: u32,
-    series: Option<String>,
+    series: Option<Series>,
     tags: Vec<Tag>,
     title: String,
     tools: Vec<String>, // This should be an enum because we all the possible tools.
@@ -41,27 +42,21 @@ pub struct Illustration {
     x_restrict: u32,
 }
 
-impl Pixiv {
-    pub fn download_illustration<'a, 'b, 'c>(
-        &'a self,
-        path: &'b std::path::Path,
-        illustration: &'c Illustration,
-    ) {
-        illustration
-            .image_urls
+impl Illustration {
+    pub fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
+        self.image_urls
             .clone()
             .into_iter()
             .map(|url| reqwest::Url::parse(&url))
             .filter_map(Result::ok)
             .for_each(|target: reqwest::Url| {
-                let response = self
-                    .client
+                let response = client
                     .request(http::Method::GET, target)
                     .header(
                         reqwest::header::REFERER,
                         format!(
                             "https://www.pixiv.net/member_illust.php?mode=medium&illust_id={}",
-                            illustration.id
+                            self.id
                         ),
                     )
                     .send();

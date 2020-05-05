@@ -34,6 +34,17 @@ pub enum ContentType {
     Novel,
 }
 
+impl ContentType {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            ContentType::Illustration => "illust",
+            ContentType::Manga => "manga",
+            ContentType::Ugoira => "ugoira",
+            ContentType::Novel => "novel",
+        }
+    }
+}
+
 /// Enum to set publicity param.
 #[derive(Debug, Clone, Copy)]
 pub enum Publicity {
@@ -191,6 +202,32 @@ impl Duration {
             Duration::LastDay => "within_last_day",
             Duration::LastWeek => "within_last_week",
             Duration::LastMonth => "within_last_month",
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum Visibility {
+    #[serde(rename = "public")]
+    Public,
+    #[serde(rename = "private")]
+    Private,
+}
+
+impl Visibility {
+    pub fn as_str(&self) -> &'static str {
+        match *self {
+            Visibility::Public => "public",
+            Visibility::Private => "private",
+        }
+    }
+}
+
+impl From<bool> for Visibility {
+    fn from(x: bool) -> Self {
+        match x {
+            true => Visibility::Public,
+            false => Visibility::Private,
         }
     }
 }

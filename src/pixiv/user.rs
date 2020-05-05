@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     account: String,
     id: u32,
-    is_followed: bool,
+    is_followed: Option<bool>,
     name: String,
     profile_image_urls: ImageUrl,
 }

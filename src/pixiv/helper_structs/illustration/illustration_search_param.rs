@@ -7,7 +7,7 @@ pub struct IllustrationSearchParam {
     search_target: SearchTarget,
     sort: SearchSort,
     duration: Option<Duration>,
-    offset: Option<i32>,
+    offset: Option<u32>,
     filter: Option<&'static str>,
 }
 
@@ -52,7 +52,7 @@ impl IllustrationSearchParam {
 
     pub fn set_offset<T>(mut self, offset: T) -> Self
     where
-        T: Into<i32>,
+        T: Into<u32>,
     {
         self.offset = Some(offset.into());
         self

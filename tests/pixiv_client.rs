@@ -1,4 +1,4 @@
-use pixiv::pixiv::client::Pixiv;
+use pixiv::pixiv::client::PixivClient;
 
 use pixiv::pixiv::request_builder::PixivRequestBuilder;
 
@@ -8,7 +8,7 @@ use serde_json::Value;
 fn test_login() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -20,7 +20,7 @@ fn test_login() {
 fn test_refresh_auth() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -38,7 +38,7 @@ fn test_refresh_auth() {
 fn test_bad_words() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -49,7 +49,7 @@ fn test_bad_words() {
 
     let request = PixivRequestBuilder::bad_words().build();
     let bad_words: Value = pixiv
-        .execute(request)
+        .execute_with_auth(request)
         .expect("Request failed.")
         .json()
         .expect("Failed to parse as json.");
@@ -61,7 +61,7 @@ fn test_bad_words() {
 fn test_work() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -72,7 +72,7 @@ fn test_work() {
 
     let request = PixivRequestBuilder::work(66024340).build();
     let work: Value = pixiv
-        .execute(request)
+        .execute_with_auth(request)
         .expect("Request failed.")
         .json()
         .expect("Failed to parse as json.");
@@ -84,7 +84,7 @@ fn test_work() {
 fn test_user() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -95,7 +95,7 @@ fn test_user() {
 
     let request = PixivRequestBuilder::user(6996493).build();
     let following_works: Value = pixiv
-        .execute(request)
+        .execute_with_auth(request)
         .expect("Request failed.")
         .json()
         .expect("Failed to parse as json.");
@@ -107,7 +107,7 @@ fn test_user() {
 fn test_following_works() {
     dotenv::dotenv().ok();
 
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
 
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
@@ -119,7 +119,7 @@ fn test_following_works() {
         .include_sanity_level(false)
         .build();
     let following_works: Value = pixiv
-        .execute(request)
+        .execute_with_auth(request)
         .expect("Request failed.")
         .json()
         .expect("Failed to parse as json.");
@@ -130,6 +130,6 @@ fn test_following_works() {
 #[test]
 #[should_panic]
 fn test_login_fail() {
-    let mut pixiv: Pixiv = Pixiv::new().unwrap();
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
     pixiv.login("", "").expect("Failed to log in.");
 }

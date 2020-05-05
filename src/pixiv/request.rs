@@ -4,7 +4,7 @@ use http::{uri::Uri, HeaderMap, Method};
 
 use std::io::Write;
 
-/// Pixiv request. You can create this using `PixivRequestBuilder::build`. This is for if you wish to inspect the request before sending.
+/// PixivClient request. You can create this using `PixivRequestBuilder::build`. This is for if you wish to inspect the request before sending.
 #[derive(Debug, Clone)]
 pub struct PixivRequest {
     pub method: Method,

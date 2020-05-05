@@ -2,6 +2,7 @@ use crate::constants::{
     AUTH_URL, CLIENT_ID, CLIENT_SECRET, HASH_SECRET, USER_AGENT, X_CLIENT_HASH, X_CLIENT_TIME,
 };
 use crate::errors::AuthError;
+use crate::pixiv::helper_structs::illustration::illustration::Illustration;
 use crate::pixiv::request::PixivRequest;
 
 use http::{header, status::StatusCode};
@@ -9,18 +10,18 @@ use md5;
 use reqwest::{Client, ClientBuilder, Response};
 use serde_json::Value;
 
-/// Used to authenticate to the Pixiv servers and construct Pixiv requests through methods creating `PixivRequestBuilder`.
+/// Used to authenticate to the PixivClient servers and construct PixivClient requests through methods creating `PixivRequestBuilder`.
 #[derive(Debug, Clone)]
-pub struct Pixiv {
+pub struct PixivClient {
     pub client: Client,
     pub access_token: String,
     pub refresh_token: String,
 }
 
-impl Pixiv {
-    /// Creates a new Pixiv struct.
+impl PixivClient {
+    /// Creates a new PixivClient struct.
 
-    pub fn new() -> Result<Pixiv, reqwest::Error> {
+    pub fn new() -> Result<PixivClient, reqwest::Error> {
         let mut headers = header::HeaderMap::new();
         headers.insert(
             header::USER_AGENT,
@@ -29,14 +30,18 @@ impl Pixiv {
 
         let client = ClientBuilder::new().default_headers(headers).build()?;
 
-        Ok(Pixiv {
+        Ok(PixivClient {
             client: client,
             access_token: String::default(),
             refresh_token: String::default(),
         })
     }
     /// This is required to use all the other functions this library provides. Requires a valid username and password.
-    pub fn login(&mut self, username: &str, password: &str) -> Result<(), AuthError> {
+    pub fn login<'a, 'b, 'c>(
+        &'a mut self,
+        username: &'b str,
+        password: &'c str,
+    ) -> Result<(), AuthError> {
         let mut data = std::collections::HashMap::new();
 
         data.insert("get_secure_url", "true");
@@ -175,7 +180,7 @@ impl Pixiv {
     }
 
     /// Executes a given `PixivRequest`.
-    pub fn execute(&self, request: PixivRequest) -> Result<Response, reqwest::Error> {
+    pub fn execute_with_auth(&self, request: PixivRequest) -> Result<Response, reqwest::Error> {
         let uri = format!("{}", request.url);
         let url = reqwest::Url::parse(&uri).unwrap();
         self.client
@@ -183,5 +188,14 @@ impl Pixiv {
             .headers(request.headers)
             .bearer_auth(self.access_token.clone())
             .send()
+    }
+
+    /// Download a given illustration to path
+    pub fn download_illustration<'a, 'b, 'c>(
+        &'a self,
+        illustration: &'c Illustration,
+        path: &'b std::path::Path,
+    ) {
+        illustration.download(&self.client, &path);
     }
 }

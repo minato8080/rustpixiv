@@ -9,7 +9,7 @@ impl From<IllustrationProxy> for Illustration {
     }
 }
 
-/// Pixiv hides the actual illustration object behind the value "illust".
+/// PixivClient hides the actual illustration object behind the value "illust".
 /// This struct exists purely to bypass this indirection...
 #[derive(Serialize, Deserialize, Debug)]
 pub struct IllustrationProxy {
