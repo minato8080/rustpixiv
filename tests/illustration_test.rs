@@ -26,7 +26,7 @@ fn test_fetching_illustration() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_illustration(ILLUST_ID_TEST).build();
+    let request = PixivRequestBuilder::request_illustration(ILLUST_ID_TEST);
 
     let illustration = pixiv
         .execute_with_auth(request)
@@ -36,7 +36,6 @@ fn test_fetching_illustration() {
         .into_inner();
 
     pixiv.download_illustration(&illustration, &std::env::current_dir().unwrap());
-    println!("{:#?}", illustration);
 }
 
 #[test]
@@ -52,15 +51,13 @@ fn test_search_illustration() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_illustration_search("Pretty Cure").build();
+    let request = PixivRequestBuilder::request_illustration_search("Pretty Cure");
 
-    let result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<IllustrationSearchProxy>()
         .expect("Failed to parse as json.");
-
-    println!("search illustrations:{:#?}", result);
 }
 
 #[test]
@@ -76,16 +73,13 @@ fn test_fetch_illustration_comments() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request =
-        PixivRequestBuilder::request_illustration_comments(ILLUST_ID_TEST, 0, false).build();
+    let request = PixivRequestBuilder::request_illustration_comments(ILLUST_ID_TEST, 0, false);
 
-    let result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<IllustrationComment>()
         .expect("Failed to parse as json.");
-
-    println!("comments:{:#?}", result);
 }
 
 #[test]
@@ -101,9 +95,9 @@ fn test_fetch_related_illustrations() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_related_illustration(ILLUST_ID_TEST, 0).build();
+    let request = PixivRequestBuilder::request_related_illustration(ILLUST_ID_TEST, 0);
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<RelatedIllustrationSearchProxy>()
@@ -123,9 +117,9 @@ fn test_fetch_illustrations_by_followed_artists() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_illustration_following(true).build();
+    let request = PixivRequestBuilder::request_illustration_following(true);
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<RelatedIllustrationSearchProxy>()
@@ -147,9 +141,9 @@ fn test_fetch_recommended_illustrations() {
 
     let args = IllustRecArg::default();
 
-    let request = PixivRequestBuilder::request_recommended_illustration(args).build();
+    let request = PixivRequestBuilder::request_recommended_illustration(args);
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<RecommendedIllustration>()
@@ -171,9 +165,9 @@ fn test_fetch_illustration_recommendations() {
 
     let args = IllustRankingArg::default();
 
-    let request = PixivRequestBuilder::request_illustration_ranking(args).build();
+    let request = PixivRequestBuilder::request_illustration_ranking(args);
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<IllustrationRanking>()
@@ -193,9 +187,9 @@ fn test_fetch_trending_illustrations() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_trending_tags().build();
+    let request = PixivRequestBuilder::request_trending_tags();
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<TrendingIllustrations>()
@@ -215,9 +209,9 @@ fn test_fetch_illustration_bookmark_info() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_illustration_bookmark_info(ILLUST_ID_TEST).build();
+    let request = PixivRequestBuilder::request_illustration_bookmark_info(ILLUST_ID_TEST);
 
-    let _result = pixiv
+    pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
         .json::<IllustBookmarkInfoProxy>()

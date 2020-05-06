@@ -12,7 +12,9 @@ fn test_login() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in.");
+    pixiv
+        .login(&username, &password)
+        .expect("Failed to log in.");
 }
 
 #[test]
@@ -34,7 +36,7 @@ fn test_refresh_auth() {
 }
 
 #[test]
-fn test_bad_words() {
+fn test_request_bad_words() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -46,7 +48,7 @@ fn test_bad_words() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::bad_words().build();
+    let request = PixivRequestBuilder::request_bad_words();
     let bad_words: Value = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
@@ -69,7 +71,7 @@ fn test_work() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::work(66024340).build();
+    let request = PixivRequestBuilder::work(66024340);
     let work: Value = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
@@ -92,7 +94,7 @@ fn test_user() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::user(6996493).build();
+    let request = PixivRequestBuilder::user(6996493);
     let following_works: Value = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
@@ -111,12 +113,11 @@ fn test_following_works() {
     let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
     let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
 
-    pixiv.login(&username, &password).expect("Failed to log in.");
+    pixiv
+        .login(&username, &password)
+        .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::following_works()
-        .image_sizes(&["large"])
-        .include_sanity_level(false)
-        .build();
+    let request = PixivRequestBuilder::following_works(&["large"], false).finish();
     let following_works: Value = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
