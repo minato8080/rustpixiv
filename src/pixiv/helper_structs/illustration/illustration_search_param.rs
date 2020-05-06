@@ -50,10 +50,7 @@ impl IllustrationSearchParam {
         self
     }
 
-    pub fn set_offset<T>(mut self, offset: T) -> Self
-    where
-        T: Into<u32>,
-    {
+    pub fn set_offset(mut self, offset: u32) -> Self {
         self.offset = Some(offset.into());
         self
     }

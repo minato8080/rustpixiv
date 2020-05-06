@@ -46,27 +46,18 @@ impl IllustRecArg {
         self
     }
 
-    pub fn set_max_bookmark_id<T>(mut self, value: T) -> Self
-    where
-        T: Into<u32>,
-    {
-        self.max_bookmark_id_for_recommend = Some(value.into());
+    pub fn set_max_bookmark_id(mut self, value: u32) -> Self {
+        self.max_bookmark_id_for_recommend = Some(value);
         self
     }
 
-    pub fn min_bookmark_id_for_recent_illustrations<T>(mut self, value: T) -> Self
-    where
-        T: Into<u32>,
-    {
-        self.min_bookmark_id_for_recent_illustrations = Some(value.into());
+    pub fn min_bookmark_id_for_recent_illustrations(mut self, value: u32) -> Self {
+        self.min_bookmark_id_for_recent_illustrations = Some(value);
         self
     }
 
-    pub fn offset<T>(mut self, value: T) -> Self
-    where
-        T: Into<u32>,
-    {
-        self.offset = value.into();
+    pub fn offset(mut self, value: u32) -> Self {
+        self.offset = value;
         self
     }
 

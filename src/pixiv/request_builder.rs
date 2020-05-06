@@ -212,7 +212,6 @@ impl PixivRequestBuilder {
         const API_URL: &'static str =
             "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
-
         let extra_params = [
             ("page", "1"),
             ("per_page", "50"),
@@ -227,7 +226,6 @@ impl PixivRequestBuilder {
         const API_URL: &'static str =
             "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
-
         let extra_params = [("publicity", "public")];
         let params = extra_params
             .iter()
@@ -245,7 +243,6 @@ impl PixivRequestBuilder {
         const API_URL: &'static str =
             "https://public-api.secure.pixiv.net/v1/me/favorite_works.json";
         let url = Uri::from_static(API_URL);
-
         let extra_params = [("publicity", "public")];
         let params = extra_params
             .iter()
@@ -259,7 +256,6 @@ impl PixivRequestBuilder {
         const API_URL: &'static str =
             "https://public-api.secure.pixiv.net/v1/me/following/works.json";
         let url = Uri::from_static(API_URL);
-
         let extra_params = [
             ("page", "1"),
             ("per_page", "30"),
@@ -292,7 +288,6 @@ impl PixivRequestBuilder {
     pub fn following() -> Self {
         const API_URL: &'static str = "https://public-api.secure.pixiv.net/v1/me/following.json";
         let url = Uri::from_static(API_URL);
-
         let extra_params = [("page", "1"), ("per_page", "30"), ("publicity", "public")];
         let params = extra_params.iter().map(|&(k, v)| (k, v.into())).collect();
         PixivRequestBuilder::new(Method::GET, url, params)
@@ -543,6 +538,16 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         let extra_params = [("restrict", visibility.into().as_str().to_string())];
+        let params = extra_params.iter().map(|(k, v)| (*k, v.into())).collect();
+        PixivRequestBuilder::new(Method::GET, uri, params)
+    }
+
+    /// TODO: Documentation
+    pub fn request_illustration_bookmark_info(illust_id: usize) -> Self {
+        let uri = format!("{}/v2/illust/bookmark/detail", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        let extra_params = [("illust_id", illust_id.to_string())];
         let params = extra_params.iter().map(|(k, v)| (*k, v.into())).collect();
         PixivRequestBuilder::new(Method::GET, uri, params)
     }

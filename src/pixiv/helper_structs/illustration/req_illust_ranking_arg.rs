@@ -40,11 +40,8 @@ impl IllustRankingArg {
         self
     }
 
-    pub fn set_offset<T>(mut self, value: T) -> Self
-    where
-        T: Into<u32>,
-    {
-        self.offset = value.into();
+    pub fn set_offset(mut self, value: u32) -> Self {
+        self.offset = value;
         self
     }
 

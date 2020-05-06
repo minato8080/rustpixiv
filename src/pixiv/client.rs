@@ -164,11 +164,11 @@ impl PixivClient {
         let client_time = self.get_current_time();
         let client_hash = self.get_client_hash(&client_time);
 
-        let var_name = self
+        let request = self
             .client
             .post(AUTH_URL)
             .header(X_CLIENT_TIME, client_time);
-        let req = var_name
+        let req = request
             .header(X_CLIENT_HASH, client_hash)
             .header("accept-language", "en_US")
             .header("host", "oauth.secure.pixiv.net")

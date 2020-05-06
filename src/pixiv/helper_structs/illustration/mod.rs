@@ -1,5 +1,7 @@
 pub mod comment;
 pub mod illustration;
+pub mod illustration_bookmark_info;
+pub mod illustration_bookmark_info_proxy;
 pub mod illustration_comment;
 pub mod illustration_proxy;
 pub mod illustration_ranking;
