@@ -1,11 +1,11 @@
 [package]
-name = "pixiv"
+name = "pixieve-rs"
 version = "0.3.0"
 edition = "2018"
-description = "Unofficial rust library for the Pixiv API."
-keywords = ["pixiv", "pixiv-api"]
-repository = "https://github.com/fairingrey/rustpixiv"
-authors = ["Allen Bui <allenbui94@gmail.com>"]
+description = "Unofficial fork of an unofficial rust library for the Pixiv API."
+keywords = ["pixiv", "pixiv-api", "cute"]
+repository = "https://github.com/hbina/rustpixiv"
+authors = ["Allen Bui <allenbui94@gmail.com>", "Hanif Bin Ariffin hanif.ariffin.4326@gmail.com"]
 license = "MIT"
 
 [dependencies]
