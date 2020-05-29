@@ -1,7 +1,7 @@
 # pixiv
 
-[![crates.io](https://img.shields.io/crates/v/pixiv.svg)](https://crates.io/crates/pixiv)
-[![docs.rs](https://docs.rs/pixiv/badge.svg)](https://docs.rs/pixiv/)
+[![crates.io](https://img.shields.io/crates/v/pixieve-rs.svg)](https://crates.io/crates/pixieve-rs)
+[![docs.rs](https://docs.rs/pixieve-rs/badge.svg)](https://docs.rs/pixieve-rs/)
 
 Unofficial rust library for the Pixiv API.
 
