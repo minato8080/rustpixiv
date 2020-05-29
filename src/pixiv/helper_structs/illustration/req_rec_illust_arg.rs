@@ -105,7 +105,7 @@ impl IllustRecArg {
             .bookmark_illust_ids
             .iter()
             .map(|x| x.to_string())
-            .collect::<Vec<_>>()
+            .collect::<Vec<String>>()
             .join(",");
 
         params.insert("bookmark_illust_ids", bookmark_illust_ids);

@@ -66,7 +66,7 @@ impl PixivRequest {
 
     /// Add header to the request
     /// TODO: Propagate this error.
-    pub fn add_param_from_str<'a>(mut self, key: &'static str, val: &'a str) -> Self {
+    pub fn add_param_from_str(mut self, key: &'static str, val: &'static str) -> Self {
         self.params.insert(key, String::from(val));
         self
     }
@@ -81,7 +81,7 @@ impl PixivRequest {
     }
 
     /// Add form data to the request
-    pub fn add_from_from_str<'a, T>(mut self, key: &'static str, val: &'a str) -> Self {
+    pub fn add_form_from_str<'a, T>(mut self, key: &'static str, val: &'a str) -> Self {
         self.form.insert(key, String::from(val));
         self
     }

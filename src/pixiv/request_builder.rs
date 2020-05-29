@@ -87,7 +87,7 @@ impl PixivRequestBuilder {
         let url = Uri::from_static(API_URL);
         PixivRequest::new(Method::POST, url)
             .add_param_from_str("publicity", "public")
-            .add_param_from_str("work_id", work_id.to_string().as_str())
+            .add_param("work_id", work_id.to_string())
             .finish()
     }
 
@@ -102,7 +102,7 @@ impl PixivRequestBuilder {
 
         PixivRequest::new(Method::DELETE, url)
             .add_param_from_str("publicity", "public")
-            .add_param_from_str("ids", comma_delimited(work_ids).as_str())
+            .add_param("ids", comma_delimited(work_ids))
             .finish()
     }
 
@@ -113,18 +113,14 @@ impl PixivRequestBuilder {
         PixivRequest::new(Method::GET, url)
             .add_param_from_str("page", "1")
             .add_param_from_str("per_page", "30")
-            .add_param_from_str(
+            .add_param(
                 "image_sizes",
                 image_sizes
                     .into_iter()
-                    .fold(String::new(), |acc, x| acc + format!(",{}", *x).as_str())
-                    .as_str(),
+                    .fold(String::new(), |acc, x| acc + format!(",{}", *x).as_str()),
             )
             .add_param_from_str("include_stats", "true")
-            .add_param_from_str(
-                "include_sanity_level",
-                include_sanity_level.to_string().as_str(),
-            )
+            .add_param("include_sanity_level", include_sanity_level.to_string())
             .finish()
     }
 
@@ -138,7 +134,7 @@ impl PixivRequestBuilder {
             .into_iter()
             .fold(
                 PixivRequest::new(Method::GET, url),
-                |acc, (k, v): (&'static str, String)| acc.add_param_from_str(k, v.as_str()),
+                |acc, (k, v): (&'static str, String)| acc.add_param(k, v),
             )
             .finish()
     }
@@ -159,7 +155,7 @@ impl PixivRequestBuilder {
         let url = Uri::from_static(API_URL);
         PixivRequest::new(Method::POST, url)
             .add_param_from_str("publicity", "public")
-            .add_param_from_str("target_user_id", user_id.to_string().as_str())
+            .add_param("target_user_id", user_id.to_string())
             .finish()
     }
 
@@ -173,7 +169,7 @@ impl PixivRequestBuilder {
         let url = Uri::from_static(API_URL);
         PixivRequest::new(Method::DELETE, url)
             .add_param_from_str("publicity", "public")
-            .add_param_from_str("delete_ids", comma_delimited(user_ids).as_str())
+            .add_param("delete_ids", comma_delimited(user_ids).as_str())
             .finish()
     }
 
@@ -264,7 +260,7 @@ impl PixivRequestBuilder {
             .add_param_from_str("include_stats", "true")
             .add_param_from_str("include_sanity_level", "true")
             .add_param_from_str("image_sizes", "px_128x128,px480mw,large")
-            .add_param_from_str("q", query.into().as_str())
+            .add_param("q", query.into().as_str())
             .finish()
     }
 
@@ -287,7 +283,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param_from_str("illust_id", illust_id.to_string().as_str())
+            .add_param("illust_id", illust_id.to_string())
             .finish()
     }
 
@@ -301,12 +297,9 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param_from_str("illust_id", illust_id.to_string().as_str())
-            .add_param_from_str("offset", offset.to_string().as_str())
-            .add_param_from_str(
-                "include_total_comments",
-                include_total_comments.to_string().as_str(),
-            )
+            .add_param("illust_id", illust_id.to_string())
+            .add_param("offset", offset.to_string())
+            .add_param("include_total_comments", include_total_comments.to_string())
             .finish()
     }
 
@@ -323,13 +316,13 @@ impl PixivRequestBuilder {
             .build()
             .iter()
             .fold(PixivRequest::new(Method::GET, uri), |acc, (key, val)| {
-                acc.add_param_from_str(key, val)
+                acc.add_param(key, String::from(val))
             })
             .finish()
     }
 
     /// TODO: Documentation
-    pub fn request_illustration_ranking<T>(argument: T) -> PixivRequest
+    pub fn request_illustrations_ranking<T>(argument: T) -> PixivRequest
     where
         T: Into<IllustRankingArg>,
     {
@@ -341,7 +334,7 @@ impl PixivRequestBuilder {
             .build()
             .iter()
             .fold(PixivRequest::new(Method::GET, uri), |acc, (key, val)| {
-                acc.add_param_from_str(key, val)
+                acc.add_param(key, String::from(val))
             })
             .finish()
     }
@@ -368,8 +361,8 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param_from_str("illust_id", illust_id.to_string().as_str())
-            .add_param_from_str("offset", offset.to_string().as_str())
+            .add_param("illust_id", illust_id.to_string())
+            .add_param("offset", offset.to_string())
             .finish()
     }
 
@@ -392,7 +385,17 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param_from_str("illust_id", illust_id.to_string().as_str())
+            .add_param("illust_id", illust_id.to_string())
+            .finish()
+    }
+
+    /// TODO: Documentation
+    pub fn request_adding_bookmark(illust_id: usize) -> PixivRequest {
+        let uri = format!("{}/v2/illust/bookmark/add", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        PixivRequest::new(Method::GET, uri)
+            .add_form("illust_id", illust_id.to_string())
             .finish()
     }
 }

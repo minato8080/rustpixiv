@@ -151,7 +151,7 @@ fn test_fetch_recommended_illustrations() {
 }
 
 #[test]
-fn test_fetch_illustration_recommendations() {
+fn test_fetch_illustrations_ranking() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -165,7 +165,7 @@ fn test_fetch_illustration_recommendations() {
 
     let args = IllustRankingArg::default();
 
-    let request = PixivRequestBuilder::request_illustration_ranking(args);
+    let request = PixivRequestBuilder::request_illustrations_ranking(args);
 
     pixiv
         .execute_with_auth(request)
@@ -175,7 +175,7 @@ fn test_fetch_illustration_recommendations() {
 }
 
 #[test]
-fn test_fetch_trending_illustrations() {
+fn test_fetch_trending_tags() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -217,3 +217,26 @@ fn test_fetch_illustration_bookmark_info() {
         .json::<IllustBookmarkInfoProxy>()
         .expect("Failed to parse as json.");
 }
+
+#[test]
+fn test_adding_bookmark() {
+    dotenv::dotenv().ok();
+
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
+
+    let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
+    let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
+
+    pixiv
+        .login(&username, &password)
+        .expect("Failed to log in.");
+
+    let request = PixivRequestBuilder::request_adding_bookmark(ILLUST_ID_TEST);
+
+    pixiv
+        .execute_with_auth(request)
+        .expect("Request failed.")
+        .json::<IllustBookmarkInfoProxy>()
+        .expect("Failed to parse as json.");
+}
+
