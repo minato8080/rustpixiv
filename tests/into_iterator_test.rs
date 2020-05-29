@@ -1,4 +1,4 @@
-use pixiv::pixiv::request_builder::PixivRequestBuilder;
+use pixieve_rs::pixiv::request_builder::PixivRequestBuilder;
 
 #[test]
 fn test_into_iterator() {

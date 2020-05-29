@@ -1,15 +1,15 @@
-use pixiv::pixiv::client::PixivClient;
-use pixiv::pixiv::helper_structs::illustration::illustration_bookmark_info_proxy::IllustBookmarkInfoProxy;
-use pixiv::pixiv::helper_structs::illustration::illustration_comment::IllustrationComment;
-use pixiv::pixiv::helper_structs::illustration::illustration_proxy::IllustrationProxy;
-use pixiv::pixiv::helper_structs::illustration::illustration_ranking::IllustrationRanking;
-use pixiv::pixiv::helper_structs::illustration::illustration_search_proxy::IllustrationSearchProxy;
-use pixiv::pixiv::helper_structs::illustration::recommended_illustration::RecommendedIllustration;
-use pixiv::pixiv::helper_structs::illustration::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
-use pixiv::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
-use pixiv::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
-use pixiv::pixiv::helper_structs::illustration::trending_illustrations::TrendingIllustrations;
-use pixiv::pixiv::request_builder::PixivRequestBuilder;
+use pixieve_rs::pixiv::client::PixivClient;
+use pixieve_rs::pixiv::helper_structs::illustration::illustration_bookmark_info_proxy::IllustBookmarkInfoProxy;
+use pixieve_rs::pixiv::helper_structs::illustration::illustration_comment::IllustrationComment;
+use pixieve_rs::pixiv::helper_structs::illustration::illustration_proxy::IllustrationProxy;
+use pixieve_rs::pixiv::helper_structs::illustration::illustration_ranking::IllustrationRanking;
+use pixieve_rs::pixiv::helper_structs::illustration::illustration_search_proxy::IllustrationSearchProxy;
+use pixieve_rs::pixiv::helper_structs::illustration::recommended_illustration::RecommendedIllustration;
+use pixieve_rs::pixiv::helper_structs::illustration::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
+use pixieve_rs::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
+use pixieve_rs::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
+use pixieve_rs::pixiv::helper_structs::illustration::trending_illustrations::TrendingIllustrations;
+use pixieve_rs::pixiv::request_builder::PixivRequestBuilder;
 
 const ILLUST_ID_TEST: usize = 75523989;
 

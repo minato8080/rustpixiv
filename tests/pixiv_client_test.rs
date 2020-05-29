@@ -1,5 +1,5 @@
-use pixiv::pixiv::client::PixivClient;
-use pixiv::pixiv::request_builder::PixivRequestBuilder;
+use pixieve_rs::pixiv::client::PixivClient;
+use pixieve_rs::pixiv::request_builder::PixivRequestBuilder;
 
 use serde_json::Value;
 
