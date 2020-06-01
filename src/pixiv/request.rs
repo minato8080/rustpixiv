@@ -81,7 +81,7 @@ impl PixivRequest {
     }
 
     /// Add form data to the request
-    pub fn add_form_from_str<'a, T>(mut self, key: &'static str, val: &'a str) -> Self {
+    pub fn add_form_from_str(mut self, key: &'static str, val: &'static str) -> Self {
         self.form.insert(key, String::from(val));
         self
     }

@@ -1,3 +1,4 @@
+use pixieve_rs::enums::Visibility;
 use pixieve_rs::pixiv::client::PixivClient;
 use pixieve_rs::pixiv::helper_structs::illustration::illustration_bookmark_info_proxy::IllustBookmarkInfoProxy;
 use pixieve_rs::pixiv::helper_structs::illustration::illustration_comment::IllustrationComment;
@@ -231,7 +232,7 @@ fn test_adding_bookmark() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_adding_bookmark(ILLUST_ID_TEST);
+    let request = PixivRequestBuilder::request_adding_bookmark(ILLUST_ID_TEST, Visibility::Public);
 
     pixiv
         .execute_with_auth(request)
@@ -239,4 +240,3 @@ fn test_adding_bookmark() {
         .json::<IllustBookmarkInfoProxy>()
         .expect("Failed to parse as json.");
 }
-

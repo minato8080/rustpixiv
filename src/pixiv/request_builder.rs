@@ -390,8 +390,20 @@ impl PixivRequestBuilder {
     }
 
     /// TODO: Documentation
-    pub fn request_adding_bookmark(illust_id: usize) -> PixivRequest {
+    pub fn request_adding_bookmark(illust_id: usize, visibility: Visibility) -> PixivRequest {
         let uri = format!("{}/v2/illust/bookmark/add", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        PixivRequest::new(Method::GET, uri)
+            .add_form("illust_id", illust_id.to_string())
+            .add_form_from_str("restrict", visibility.as_str())
+            .add_form("tags", "") // TODO: Consider introducing a proper constant for this?
+            .finish()
+    }
+
+    /// TODO: Documentation
+    pub fn request_delete_bookmark(illust_id: usize) -> PixivRequest {
+        let uri = format!("{}/v2/illust/bookmark/delete", BASE_URL);
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
