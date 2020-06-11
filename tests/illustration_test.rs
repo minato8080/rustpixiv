@@ -234,9 +234,38 @@ fn test_adding_bookmark() {
 
     let request = PixivRequestBuilder::request_adding_bookmark(ILLUST_ID_TEST, Visibility::Public);
 
-    pixiv
+    println!("request:\n{:?}", request);
+
+    let result = pixiv
         .execute_with_auth(request)
         .expect("Request failed.")
-        .json::<IllustBookmarkInfoProxy>()
+        .json::<serde_json::Value>()
         .expect("Failed to parse as json.");
+    println!("result:\n{}", result);
+}
+
+#[test]
+fn test_delete_bookmark() {
+    dotenv::dotenv().ok();
+
+    let mut pixiv: PixivClient = PixivClient::new().unwrap();
+
+    let username = std::env::var("PIXIV_ID").expect("PIXIV_ID isn't set!");
+    let password = std::env::var("PIXIV_PW").expect("PIXIV_PW isn't set!");
+
+    pixiv
+        .login(&username, &password)
+        .expect("Failed to log in.");
+
+    let request = PixivRequestBuilder::request_delete_bookmark(ILLUST_ID_TEST);
+
+    println!("request:\n{:?}", request);
+
+    let result = pixiv
+        .execute_with_auth(request)
+        .expect("Request failed.")
+        .json::<serde_json::Value>()
+        .expect("Failed to parse as json.");
+
+    println!("result:\n{}", result);
 }

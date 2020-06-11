@@ -73,7 +73,7 @@ pub struct IllustrationSearchParamIterator {
     index: usize,
 }
 
-// TODO: Figure out the lifetime of this Iterator...
+// TODO: Remove this crap.
 impl Iterator for IllustrationSearchParamIterator {
     type Item = (&'static str, String);
 

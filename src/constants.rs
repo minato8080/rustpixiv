@@ -9,3 +9,11 @@ pub const USER_AGENT: &'static str = "PixivAndroidApp/5.0.64 (Android 6.0)";
 pub const X_CLIENT_TIME: &'static str = "X-Client-Time";
 pub const X_CLIENT_HASH: &'static str = "X-Client-Hash";
 pub const FOR_IOS: &'static str = "for_ios";
+
+// Header Keys
+pub const ILLUST_ID: &'static str = "illust_id";
+pub const RESTRICT: &'static str = "restrict";
+pub const TAGS: &'static str = "tags";
+
+// Header Values
+pub const NONE: &'static str = "none";

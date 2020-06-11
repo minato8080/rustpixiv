@@ -1,4 +1,4 @@
-use crate::constants::BASE_URL;
+use crate::constants::{BASE_URL, ILLUST_ID, NONE, RESTRICT, TAGS};
 use crate::enums::{Filter, RankingType, Visibility};
 use crate::pixiv::helper_structs::illustration::illustration_search_param::IllustrationSearchParam;
 use crate::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
@@ -283,7 +283,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param("illust_id", illust_id.to_string())
+            .add_param(ILLUST_ID, illust_id.to_string())
             .finish()
     }
 
@@ -297,7 +297,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param("illust_id", illust_id.to_string())
+            .add_param(ILLUST_ID, illust_id.to_string())
             .add_param("offset", offset.to_string())
             .add_param("include_total_comments", include_total_comments.to_string())
             .finish()
@@ -361,7 +361,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param("illust_id", illust_id.to_string())
+            .add_param(ILLUST_ID, illust_id.to_string())
             .add_param("offset", offset.to_string())
             .finish()
     }
@@ -375,7 +375,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param_from_str("restrict", visibility.into().as_str())
+            .add_param_from_str(RESTRICT, visibility.into().as_str())
             .finish()
     }
 
@@ -385,7 +385,7 @@ impl PixivRequestBuilder {
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
-            .add_param("illust_id", illust_id.to_string())
+            .add_param(ILLUST_ID, illust_id.to_string())
             .finish()
     }
 
@@ -394,20 +394,19 @@ impl PixivRequestBuilder {
         let uri = format!("{}/v2/illust/bookmark/add", BASE_URL);
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
-        PixivRequest::new(Method::GET, uri)
-            .add_form("illust_id", illust_id.to_string())
-            .add_form_from_str("restrict", visibility.as_str())
-            .add_form("tags", "") // TODO: Consider introducing a proper constant for this?
+        PixivRequest::new(Method::POST, uri)
+            .add_form(ILLUST_ID, illust_id.to_string().as_str())
+            .add_form_from_str(RESTRICT, visibility.as_str())
             .finish()
     }
 
     /// TODO: Documentation
     pub fn request_delete_bookmark(illust_id: usize) -> PixivRequest {
-        let uri = format!("{}/v2/illust/bookmark/delete", BASE_URL);
+        let uri = format!("{}/v1/illust/bookmark/delete", BASE_URL);
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
-        PixivRequest::new(Method::GET, uri)
-            .add_form("illust_id", illust_id.to_string())
+        PixivRequest::new(Method::POST, uri)
+            .add_form(ILLUST_ID, illust_id.to_string())
             .finish()
     }
 }

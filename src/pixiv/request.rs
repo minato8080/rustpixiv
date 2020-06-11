@@ -87,6 +87,7 @@ impl PixivRequest {
     }
 
     /// TODO: Propagate this error.
+    /// TODO: This should return the actual Request and called from a Builder.
     /// Sets query using `serde_urlencoded`
     pub fn finish(mut self) -> Self {
         let mut uri_parts = self.url.into_parts();

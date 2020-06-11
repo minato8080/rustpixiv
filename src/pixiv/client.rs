@@ -164,11 +164,9 @@ impl PixivClient {
         let client_time = self.get_current_time();
         let client_hash = self.get_client_hash(&client_time);
 
-        let request = self
-            .client
+        self.client
             .post(AUTH_URL)
-            .header(X_CLIENT_TIME, client_time);
-        let req = request
+            .header(X_CLIENT_TIME, client_time)
             .header(X_CLIENT_HASH, client_hash)
             .header("accept-language", "en_US")
             .header("host", "oauth.secure.pixiv.net")
@@ -176,17 +174,19 @@ impl PixivClient {
             .header("app-os-version", "5.0.156")
             .header("content-type", "application/x-www-form-urlencoded")
             .header("accept-encoding", "gzip")
-            .form(&data);
-        req.send()
+            .form(&data)
+            .send()
     }
 
     /// Executes a given `PixivRequest`.
+    /// TODO: Add another function that can execute without authentication (is there even anything like this?)
     pub fn execute_with_auth(&self, request: PixivRequest) -> Result<Response, reqwest::Error> {
         let uri = format!("{}", request.url);
         let url = reqwest::Url::parse(&uri).unwrap();
         self.client
             .request(request.method, url)
             .headers(request.headers)
+            .form(&request.form)
             .bearer_auth(self.access_token.clone())
             .send()
     }
