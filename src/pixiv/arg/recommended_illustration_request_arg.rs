@@ -2,10 +2,10 @@ use crate::enums::ContentType;
 
 use serde::{Deserialize, Serialize};
 
-/// IllustRecArg (Request Recommended Illustration Arguments Builder).
-/// Builds a `IllustRecArg`
+/// RecommendedIllustrationRequestArg (Request Recommended Illustration Arguments Builder).
+/// Builds a `RecommendedIllustrationRequestArg`
 #[derive(Debug, Serialize, Deserialize)]
-pub struct IllustRecArg {
+pub struct RecommendedIllustrationRequestArg {
     content_type: ContentType,
     include_ranking_illustrations: bool,
     max_bookmark_id_for_recommend: Option<u32>,
@@ -15,9 +15,9 @@ pub struct IllustRecArg {
     include_ranking_label: bool,
 }
 
-impl Default for IllustRecArg {
+impl Default for RecommendedIllustrationRequestArg {
     fn default() -> Self {
-        IllustRecArg {
+        RecommendedIllustrationRequestArg {
             content_type: ContentType::Illustration,
             include_ranking_illustrations: false,
             max_bookmark_id_for_recommend: None,
@@ -29,7 +29,7 @@ impl Default for IllustRecArg {
     }
 }
 
-impl IllustRecArg {
+impl RecommendedIllustrationRequestArg {
     pub fn content_type<T>(mut self, value: T) -> Self
     where
         T: Into<ContentType>,

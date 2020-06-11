@@ -1,4 +1,4 @@
-use crate::pixiv::helper_structs::illustration::illustration_tag::IllustrationTag;
+use crate::pixiv::helper_structs::illustration_tag::IllustrationTag;
 use serde::{Deserialize, Serialize};
 
 /// TrendingIllustration

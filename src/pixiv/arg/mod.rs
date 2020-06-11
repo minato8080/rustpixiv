@@ -1,0 +1,5 @@
+pub mod illustration_ranking_request_arg;
+pub mod illustration_search_request_arg;
+pub mod recommended_illustration_request_arg;
+pub mod user_bookmark_tags_illustration_request_arg;
+pub mod user_following_request_arg;

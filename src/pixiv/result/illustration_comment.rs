@@ -1,4 +1,4 @@
-use crate::pixiv::helper_structs::illustration::comment::Comment;
+use crate::pixiv::helper_structs::comment::Comment;
 use serde::{Deserialize, Serialize};
 
 /// IllustrationComment

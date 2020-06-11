@@ -1,16 +1,19 @@
 use pixieve_rs::enums::Visibility;
+use pixieve_rs::pixiv::arg::illustration_ranking_request_arg::IllustrationRankingRequestArg;
+use pixieve_rs::pixiv::arg::illustration_search_request_arg::IllustrationSearchRequestArg;
+use pixieve_rs::pixiv::arg::recommended_illustration_request_arg::RecommendedIllustrationRequestArg;
 use pixieve_rs::pixiv::client::PixivClient;
-use pixieve_rs::pixiv::helper_structs::illustration::illustration_bookmark_info_proxy::IllustBookmarkInfoProxy;
-use pixieve_rs::pixiv::helper_structs::illustration::illustration_comment::IllustrationComment;
-use pixieve_rs::pixiv::helper_structs::illustration::illustration_proxy::IllustrationProxy;
-use pixieve_rs::pixiv::helper_structs::illustration::illustration_ranking::IllustrationRanking;
-use pixieve_rs::pixiv::helper_structs::illustration::illustration_search_proxy::IllustrationSearchProxy;
-use pixieve_rs::pixiv::helper_structs::illustration::recommended_illustration::RecommendedIllustration;
-use pixieve_rs::pixiv::helper_structs::illustration::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
-use pixieve_rs::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
-use pixieve_rs::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
-use pixieve_rs::pixiv::helper_structs::illustration::trending_illustrations::TrendingIllustrations;
+
 use pixieve_rs::pixiv::request_builder::PixivRequestBuilder;
+
+use pixieve_rs::pixiv::result::illustration_bookmark_info_proxy::IllustBookmarkInfoProxy;
+use pixieve_rs::pixiv::result::illustration_comment::IllustrationComment;
+use pixieve_rs::pixiv::result::illustration_proxy::IllustrationProxy;
+use pixieve_rs::pixiv::result::illustration_ranking::IllustrationRanking;
+use pixieve_rs::pixiv::result::illustration_search_proxy::IllustrationSearchProxy;
+use pixieve_rs::pixiv::result::recommended_illustration::RecommendedIllustration;
+use pixieve_rs::pixiv::result::related_illustration_search_proxy::RelatedIllustrationSearchProxy;
+use pixieve_rs::pixiv::result::trending_illustrations::TrendingIllustrations;
 
 const ILLUST_ID_TEST: usize = 75523989;
 
@@ -52,7 +55,9 @@ fn test_search_illustration() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let request = PixivRequestBuilder::request_illustration_search("Pretty Cure");
+    let arg = IllustrationSearchRequestArg::new("Pretty Cure");
+
+    let request = PixivRequestBuilder::request_illustration_search(arg);
 
     pixiv
         .execute_with_auth(request)
@@ -140,7 +145,7 @@ fn test_fetch_recommended_illustrations() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let args = IllustRecArg::default();
+    let args = RecommendedIllustrationRequestArg::default();
 
     let request = PixivRequestBuilder::request_recommended_illustration(args);
 
@@ -164,7 +169,7 @@ fn test_fetch_illustrations_ranking() {
         .login(&username, &password)
         .expect("Failed to log in.");
 
-    let args = IllustRankingArg::default();
+    let args = IllustrationRankingRequestArg::default();
 
     let request = PixivRequestBuilder::request_illustrations_ranking(args);
 

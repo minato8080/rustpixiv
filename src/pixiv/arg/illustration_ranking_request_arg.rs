@@ -4,7 +4,7 @@ use crate::enums::RankingMode;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-pub struct IllustRankingArg {
+pub struct IllustrationRankingRequestArg {
     mode: RankingMode,
     // TODO: Figure out how to encapsulate the date properly.
     date: Option<String>,
@@ -12,9 +12,9 @@ pub struct IllustRankingArg {
     filter: Filter,
 }
 
-impl Default for IllustRankingArg {
+impl Default for IllustrationRankingRequestArg {
     fn default() -> Self {
-        IllustRankingArg {
+        IllustrationRankingRequestArg {
             mode: RankingMode::Daily,
             date: None,
             offset: 0,
@@ -23,7 +23,7 @@ impl Default for IllustRankingArg {
     }
 }
 
-impl IllustRankingArg {
+impl IllustrationRankingRequestArg {
     pub fn set_mode<T>(mut self, value: T) -> Self
     where
         T: Into<RankingMode>,

@@ -65,6 +65,17 @@ impl PixivRequest {
     }
 
     /// Add header to the request
+    pub fn maybe_add_param<U>(mut self, key: &'static str, val: Option<U>) -> Self
+    where
+        U: Into<String>,
+    {
+        if let Some(val) = val {
+            self.params.insert(key, val.into());
+        }
+        self
+    }
+
+    /// Add header to the request
     /// TODO: Propagate this error.
     pub fn add_param_from_str(mut self, key: &'static str, val: &'static str) -> Self {
         self.params.insert(key, String::from(val));

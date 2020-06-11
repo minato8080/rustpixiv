@@ -13,7 +13,9 @@ pub const FOR_IOS: &'static str = "for_ios";
 // Header Keys
 pub const ILLUST_ID: &'static str = "illust_id";
 pub const RESTRICT: &'static str = "restrict";
-pub const TAGS: &'static str = "tags";
+pub const TAGS: &'static str = "tags[]";
+pub const OFFSET: &'static str = "offset";
+pub const USER_ID: &'static str = "user_id";
 
 // Header Values
 pub const NONE: &'static str = "none";

@@ -1,10 +1,10 @@
 use crate::enums::ContentType;
 
-use crate::pixiv::helper_structs::illustration::meta_page::MetaPage;
-use crate::pixiv::helper_structs::illustration::series::Series;
-use crate::pixiv::helper_structs::illustration::single_page_meta::SingleMetaPage;
-use crate::pixiv::helper_structs::illustration::tag::Tag;
 use crate::pixiv::helper_structs::image_url::ImageUrl;
+use crate::pixiv::helper_structs::meta_page::MetaPage;
+use crate::pixiv::helper_structs::series::Series;
+use crate::pixiv::helper_structs::single_page_meta::SingleMetaPage;
+use crate::pixiv::helper_structs::tag::Tag;
 use crate::pixiv::user::User;
 
 use serde::{Deserialize, Serialize};

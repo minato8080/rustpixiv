@@ -1,8 +1,10 @@
-use crate::constants::{BASE_URL, ILLUST_ID, NONE, RESTRICT, TAGS};
+use crate::constants::{BASE_URL, ILLUST_ID, OFFSET, RESTRICT, TAGS, USER_ID};
 use crate::enums::{Filter, RankingType, Visibility};
-use crate::pixiv::helper_structs::illustration::illustration_search_param::IllustrationSearchParam;
-use crate::pixiv::helper_structs::illustration::req_illust_ranking_arg::IllustRankingArg;
-use crate::pixiv::helper_structs::illustration::req_rec_illust_arg::IllustRecArg;
+use crate::pixiv::arg::illustration_ranking_request_arg::IllustrationRankingRequestArg;
+use crate::pixiv::arg::illustration_search_request_arg::IllustrationSearchRequestArg;
+use crate::pixiv::arg::recommended_illustration_request_arg::RecommendedIllustrationRequestArg;
+use crate::pixiv::arg::user_bookmark_tags_illustration_request_arg::UserBookmarkTagsIllustrationRequestArg;
+use crate::pixiv::arg::user_following_request_arg::UserFollowingRequestArgs;
 use crate::pixiv::request::PixivRequest;
 use crate::utils::comma_delimited;
 
@@ -126,7 +128,7 @@ impl PixivRequestBuilder {
 
     pub fn request_illustration_search<T>(params: T) -> PixivRequest
     where
-        T: Into<IllustrationSearchParam>,
+        T: Into<IllustrationSearchRequestArg>,
     {
         let url = http::Uri::try_from(format!("{}/v1/search/illust", BASE_URL)).unwrap();
         params
@@ -298,7 +300,7 @@ impl PixivRequestBuilder {
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
-            .add_param("offset", offset.to_string())
+            .add_param(OFFSET, offset.to_string())
             .add_param("include_total_comments", include_total_comments.to_string())
             .finish()
     }
@@ -306,7 +308,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_recommended_illustration<T>(argument: T) -> PixivRequest
     where
-        T: Into<IllustRecArg>,
+        T: Into<RecommendedIllustrationRequestArg>,
     {
         let argument = argument.into();
         let uri = format!("{}/v1/illust/recommended", BASE_URL);
@@ -324,7 +326,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_illustrations_ranking<T>(argument: T) -> PixivRequest
     where
-        T: Into<IllustRankingArg>,
+        T: Into<IllustrationRankingRequestArg>,
     {
         let argument = argument.into();
         let uri = format!("{}/v1/illust/ranking", BASE_URL);
@@ -362,7 +364,7 @@ impl PixivRequestBuilder {
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
-            .add_param("offset", offset.to_string())
+            .add_param(OFFSET, offset.to_string())
             .finish()
     }
 
@@ -397,16 +399,45 @@ impl PixivRequestBuilder {
         PixivRequest::new(Method::POST, uri)
             .add_form(ILLUST_ID, illust_id.to_string().as_str())
             .add_form_from_str(RESTRICT, visibility.as_str())
+            .add_form_from_str(TAGS, "Fate/GO")
             .finish()
     }
 
     /// TODO: Documentation
+    /// TODO: This is V1 for whatever reason...
     pub fn request_delete_bookmark(illust_id: usize) -> PixivRequest {
         let uri = format!("{}/v1/illust/bookmark/delete", BASE_URL);
         let bytes = Bytes::from(uri.as_str());
         let uri = Uri::from_shared(bytes).unwrap();
         PixivRequest::new(Method::POST, uri)
             .add_form(ILLUST_ID, illust_id.to_string())
+            .finish()
+    }
+
+    /// TODO: Documentation
+    /// TODO: Test
+    pub fn request_user_bookmark_tags_illustration(
+        args: UserBookmarkTagsIllustrationRequestArg,
+    ) -> PixivRequest {
+        let uri = format!("{}/v1/user/bookmark-tags/illust", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        PixivRequest::new(Method::GET, uri)
+            .add_param(RESTRICT, args.restrict.as_str())
+            .maybe_add_param(OFFSET, args.offset.map(|x| x.to_string()))
+            .finish()
+    }
+
+    /// TODO: Documentation
+    /// TODO: Test
+    pub fn request_user_following(args: UserFollowingRequestArgs) -> PixivRequest {
+        let uri = format!("{}/v1/user/following", BASE_URL);
+        let bytes = Bytes::from(uri.as_str());
+        let uri = Uri::from_shared(bytes).unwrap();
+        PixivRequest::new(Method::GET, uri)
+            .add_param(USER_ID, args.user_id.to_string())
+            .add_param(RESTRICT, args.restrict.as_str())
+            .add_param(OFFSET, args.offset.to_string())
             .finish()
     }
 }

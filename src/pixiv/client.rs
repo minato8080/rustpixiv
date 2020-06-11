@@ -2,7 +2,7 @@ use crate::constants::{
     AUTH_URL, CLIENT_ID, CLIENT_SECRET, HASH_SECRET, USER_AGENT, X_CLIENT_HASH, X_CLIENT_TIME,
 };
 use crate::errors::AuthError;
-use crate::pixiv::helper_structs::illustration::illustration::Illustration;
+use crate::pixiv::helper_structs::illustration::Illustration;
 use crate::pixiv::request::PixivRequest;
 
 use http::{header, status::StatusCode};

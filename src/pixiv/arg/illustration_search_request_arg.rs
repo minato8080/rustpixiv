@@ -2,7 +2,7 @@ use crate::enums::{Duration, SearchSort, SearchTarget};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
-pub struct IllustrationSearchParam {
+pub struct IllustrationSearchRequestArg {
     word: String,
     search_target: SearchTarget,
     sort: SearchSort,
@@ -11,12 +11,12 @@ pub struct IllustrationSearchParam {
     filter: Option<&'static str>,
 }
 
-impl IllustrationSearchParam {
-    pub fn default<T>(word: T) -> Self
+impl IllustrationSearchRequestArg {
+    pub fn new<T>(word: T) -> Self
     where
         T: Into<String>,
     {
-        IllustrationSearchParam {
+        IllustrationSearchRequestArg {
             word: word.into(),
             search_target: SearchTarget::TagsPartial,
             sort: SearchSort::DateDescending,
@@ -56,7 +56,7 @@ impl IllustrationSearchParam {
     }
 }
 
-impl IntoIterator for IllustrationSearchParam {
+impl IntoIterator for IllustrationSearchRequestArg {
     type Item = (&'static str, String);
     type IntoIter = IllustrationSearchParamIterator;
 
@@ -69,7 +69,7 @@ impl IntoIterator for IllustrationSearchParam {
 }
 
 pub struct IllustrationSearchParamIterator {
-    vec: IllustrationSearchParam,
+    vec: IllustrationSearchRequestArg,
     index: usize,
 }
 
@@ -97,11 +97,5 @@ impl Iterator for IllustrationSearchParamIterator {
                 return Some(r);
             }
         }
-    }
-}
-
-impl From<&'static str> for IllustrationSearchParam {
-    fn from(x: &'static str) -> Self {
-        IllustrationSearchParam::default(x)
     }
 }
