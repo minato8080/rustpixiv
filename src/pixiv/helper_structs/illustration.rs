@@ -5,6 +5,7 @@ use crate::pixiv::helper_structs::meta_page::MetaPage;
 use crate::pixiv::helper_structs::series::Series;
 use crate::pixiv::helper_structs::single_page_meta::SingleMetaPage;
 use crate::pixiv::helper_structs::tag::Tag;
+use crate::pixiv::result::illustration_proxy::IllustrationProxy;
 use crate::pixiv::user::User;
 
 use serde::{Deserialize, Serialize};
@@ -40,6 +41,13 @@ pub struct Illustration {
     user: User,
     visible: bool,
     x_restrict: u32,
+}
+
+/// Convert `IllustrationProxy` to `Illustration`
+impl From<IllustrationProxy> for Illustration {
+    fn from(proxy: IllustrationProxy) -> Self {
+        proxy.illust
+    }
 }
 
 impl Illustration {

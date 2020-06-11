@@ -25,6 +25,7 @@ pub struct ImageUrlIterator {
     index: usize,
 }
 
+/// TODO: Rework this hack?
 impl Iterator for ImageUrlIterator {
     type Item = String;
     fn next(&mut self) -> Option<Self::Item> {
