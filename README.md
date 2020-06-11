@@ -14,4 +14,4 @@ I am trying to fix the library so its usable and possibly maintain them.
 
 # Contributing
 
-Any help is appreciated! The author of this crate is REALLY new to rust (@fairingrey), so feel free to give any helpful advice or open up an issue on what this project might need.
+Feel free to expand this library.
