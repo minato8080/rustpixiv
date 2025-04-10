@@ -51,38 +51,44 @@ impl From<IllustrationProxy> for Illustration {
 }
 
 impl Illustration {
-    pub fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
-        self.image_urls
+    pub async fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
+        let urls: Vec<reqwest::Url> = self
+            .image_urls
             .clone()
             .into_iter()
             .map(|url| reqwest::Url::parse(&url))
             .filter_map(Result::ok)
-            .for_each(|target: reqwest::Url| {
-                let response = client
-                    .request(http::Method::GET, target)
-                    .header(
-                        reqwest::header::REFERER,
-                        format!(
-                            "https://www.pixiv.net/member_illust.php?mode=medium&illust_id={}",
-                            self.id
-                        ),
-                    )
-                    .send();
-                let mut response = response.unwrap();
-                let mut dest = {
-                    println!("response_url:{}", response.url());
-                    let fname = response
-                        .url()
-                        .path_segments()
-                        .and_then(|segments| segments.last())
-                        .and_then(|name| if name.is_empty() { None } else { Some(name) })
-                        .unwrap_or("tmp.bin");
-                    println!("file to download_illustration: '{}'", fname);
-                    let fname = path.join(fname);
-                    println!("will be located under: '{:?}'", fname);
-                    std::fs::File::create(fname).unwrap()
-                };
-                std::io::copy(&mut response, &mut dest).unwrap();
-            })
+            .collect();
+
+        for target in urls {
+            let response = client
+                .request(http::Method::GET, target)
+                .header(
+                    reqwest::header::REFERER,
+                    format!(
+                        "https://www.pixiv.net/member_illust.php?mode=medium&illust_id={}",
+                        self.id
+                    ),
+                )
+                .send();
+            let response = response.await.unwrap();
+            let mut dest = {
+                println!("response_url:{}", response.url());
+                let fname = response
+                    .url()
+                    .path_segments()
+                    .and_then(|segments| segments.last())
+                    .and_then(|name| if name.is_empty() { None } else { Some(name) })
+                    .unwrap_or("tmp.bin");
+                println!("file to download_illustration: '{}'", fname);
+                let fname = path.join(fname);
+                println!("will be located under: '{:?}'", fname);
+                std::fs::File::create(fname).unwrap()
+            };
+
+            let bytes = response.bytes().await.unwrap();
+            let mut content = bytes.as_ref();
+            std::io::copy(&mut content, &mut dest).unwrap();
+        }
     }
 }

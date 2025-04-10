@@ -37,7 +37,7 @@ impl PixivClient {
         })
     }
     /// This is required to use all the other functions this library provides. Requires a valid username and password.
-    pub fn login<'a, 'b, 'c>(
+    pub async fn login<'a, 'b, 'c>(
         &'a mut self,
         username: &'b str,
         password: &'c str,
@@ -52,8 +52,9 @@ impl PixivClient {
         data.insert("username", username);
         data.insert("password", password);
 
-        let mut res = self
+        let res = self
             .send_auth_request(&data)
+            .await
             .expect("Error occured while requesting token.");
 
         match res.status() {
@@ -67,7 +68,7 @@ impl PixivClient {
         }
 
         // TODO: Figure out the correct struct for this
-        let mut json_response: Value = res.json().unwrap();
+        let mut json_response: Value = res.json().await.unwrap();
 
         self.access_token = match json_response["response"]["access_token"].take() {
             Value::String(s) => s,
@@ -82,7 +83,7 @@ impl PixivClient {
     }
 
     /// Refreshes the authentication. You should use this when your access token is close to expiring.
-    pub fn refresh_auth(&mut self) -> Result<(), AuthError> {
+    pub async fn refresh_auth(&mut self) -> Result<(), AuthError> {
         let refresh_clone = self.refresh_token.clone();
         let mut data = std::collections::HashMap::new();
 
@@ -93,8 +94,9 @@ impl PixivClient {
         data.insert("refresh_token", refresh_clone.as_str());
         data.insert("include_policy", "true");
 
-        let mut res = self
+        let res = self
             .send_auth_request(&data)
+            .await
             .expect("Error occured while requesting token.");
 
         match res.status() {
@@ -109,7 +111,10 @@ impl PixivClient {
             }
         }
 
-        let mut json_response: Value = res.json().unwrap();
+        let mut json_response: Value = match res.json().await {
+            Ok(json) => json,
+            Err(e) => panic!("Failed to parse JSON: {}", e),
+        };
 
         self.access_token = match json_response["response"]["access_token"].take() {
             Value::String(s) => s,
@@ -157,7 +162,7 @@ impl PixivClient {
     }
 
     /// Private helper method
-    fn send_auth_request(
+    async fn send_auth_request(
         &self,
         data: &std::collections::HashMap<&str, &str>,
     ) -> Result<Response, reqwest::Error> {
@@ -170,17 +175,21 @@ impl PixivClient {
             .header(X_CLIENT_HASH, client_hash)
             .header("accept-language", "en_US")
             .header("host", "oauth.secure.pixiv.net")
-            .header("app-os", "android")
-            .header("app-os-version", "5.0.156")
+            .header("app-os", "ios")
+            .header("app-os-version", "14.6")
+            .header("user-agent", "PixivIOSApp/7.13.3 (iOS 14.6; iPhone13,2)")
             .header("content-type", "application/x-www-form-urlencoded")
-            .header("accept-encoding", "gzip")
             .form(&data)
             .send()
+            .await
     }
 
     /// Executes a given `PixivRequest`.
     /// TODO: Add another function that can execute without authentication (is there even anything like this?)
-    pub fn execute_with_auth(&self, request: PixivRequest) -> Result<Response, reqwest::Error> {
+    pub async fn execute_with_auth(
+        &self,
+        request: PixivRequest,
+    ) -> Result<Response, reqwest::Error> {
         let uri = format!("{}", request.url);
         let url = reqwest::Url::parse(&uri).unwrap();
         self.client
@@ -189,14 +198,15 @@ impl PixivClient {
             .form(&request.form)
             .bearer_auth(self.access_token.clone())
             .send()
+            .await
     }
 
     /// Download a given illustration to path
-    pub fn download_illustration<'a, 'b, 'c>(
+    pub async fn download_illustration<'a, 'b, 'c>(
         &'a self,
         illustration: &'c Illustration,
         path: &'b std::path::Path,
     ) {
-        illustration.download(&self.client, &path);
+        illustration.download(&self.client, &path).await;
     }
 }

@@ -8,8 +8,7 @@ use crate::pixiv::arg::user_following_request_arg::UserFollowingRequestArgs;
 use crate::pixiv::request::PixivRequest;
 use crate::utils::comma_delimited;
 
-use bytes::Bytes;
-use http::{uri::Uri, HttpTryFrom, Method};
+use http::{uri::Uri, Method};
 use std::borrow::Borrow;
 
 /// PixivClient request builder. You can create this using any of the provided methods in `PixivClient`, or through `PixivRequestBuilder::new`.
@@ -282,8 +281,7 @@ impl PixivRequestBuilder {
     /// Used to build a request to fetch an illustration givenn its id.
     pub fn request_illustration(illust_id: usize) -> PixivRequest {
         let uri = format!("{}/v1/illust/detail", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
             .finish()
@@ -296,8 +294,7 @@ impl PixivRequestBuilder {
         include_total_comments: bool,
     ) -> PixivRequest {
         let uri = format!("{}/v1/illust/comments", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
             .add_param(OFFSET, offset.to_string())
@@ -312,8 +309,7 @@ impl PixivRequestBuilder {
     {
         let argument = argument.into();
         let uri = format!("{}/v1/illust/recommended", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         argument
             .build()
             .iter()
@@ -330,8 +326,7 @@ impl PixivRequestBuilder {
     {
         let argument = argument.into();
         let uri = format!("{}/v1/illust/ranking", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         argument
             .build()
             .iter()
@@ -344,8 +339,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_trending_tags() -> PixivRequest {
         let uri = format!("{}/v1/trending-tags/illust", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param_from_str("filter", Filter::ForiOS.as_str())
             .finish()
@@ -360,8 +354,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_related_illustration(illust_id: usize, offset: usize) -> PixivRequest {
         let uri = format!("{}/v2/illust/related", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
             .add_param(OFFSET, offset.to_string())
@@ -374,8 +367,7 @@ impl PixivRequestBuilder {
         T: Into<Visibility>,
     {
         let uri = format!("{}/v2/illust/follow", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param_from_str(RESTRICT, visibility.into().as_str())
             .finish()
@@ -384,8 +376,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_illustration_bookmark_info(illust_id: usize) -> PixivRequest {
         let uri = format!("{}/v2/illust/bookmark/detail", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(ILLUST_ID, illust_id.to_string())
             .finish()
@@ -394,8 +385,7 @@ impl PixivRequestBuilder {
     /// TODO: Documentation
     pub fn request_adding_bookmark(illust_id: usize, visibility: Visibility) -> PixivRequest {
         let uri = format!("{}/v2/illust/bookmark/add", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::POST, uri)
             .add_form(ILLUST_ID, illust_id.to_string().as_str())
             .add_form_from_str(RESTRICT, visibility.as_str())
@@ -407,8 +397,7 @@ impl PixivRequestBuilder {
     /// TODO: This is V1 for whatever reason...
     pub fn request_delete_bookmark(illust_id: usize) -> PixivRequest {
         let uri = format!("{}/v1/illust/bookmark/delete", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::POST, uri)
             .add_form(ILLUST_ID, illust_id.to_string())
             .finish()
@@ -420,8 +409,7 @@ impl PixivRequestBuilder {
         args: UserBookmarkTagsIllustrationRequestArg,
     ) -> PixivRequest {
         let uri = format!("{}/v1/user/bookmark-tags/illust", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(RESTRICT, args.restrict.as_str())
             .maybe_add_param(OFFSET, args.offset.map(|x| x.to_string()))
@@ -432,8 +420,7 @@ impl PixivRequestBuilder {
     /// TODO: Test
     pub fn request_user_following(args: UserFollowingRequestArgs) -> PixivRequest {
         let uri = format!("{}/v1/user/following", BASE_URL);
-        let bytes = Bytes::from(uri.as_str());
-        let uri = Uri::from_shared(bytes).unwrap();
+        let uri = Uri::try_from(uri.as_str()).unwrap();
         PixivRequest::new(Method::GET, uri)
             .add_param(USER_ID, args.user_id.to_string())
             .add_param(RESTRICT, args.restrict.as_str())

@@ -112,7 +112,7 @@ impl PixivRequest {
         };
 
         uri_parts.path_and_query = Some(
-            http::uri::PathAndQuery::from_shared(buffer.into_inner().freeze())
+            http::uri::PathAndQuery::try_from(buffer.into_inner().freeze().as_ref())
                 .expect("To create path and query"),
         );
 
