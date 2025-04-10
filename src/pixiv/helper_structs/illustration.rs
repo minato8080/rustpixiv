@@ -51,7 +51,7 @@ impl From<IllustrationProxy> for Illustration {
 }
 
 impl Illustration {
-    pub async fn download(&self, client: &reqwest::Client, path: &std::path::Path) {
+    pub fn download(&self, client: &reqwest::blocking::Client, path: &std::path::Path) {
         let urls: Vec<reqwest::Url> = self
             .image_urls
             .clone()
@@ -71,7 +71,7 @@ impl Illustration {
                     ),
                 )
                 .send();
-            let response = response.await.unwrap();
+            let response = response.unwrap();
             let mut dest = {
                 println!("response_url:{}", response.url());
                 let fname = response
@@ -86,7 +86,7 @@ impl Illustration {
                 std::fs::File::create(fname).unwrap()
             };
 
-            let bytes = response.bytes().await.unwrap();
+            let bytes = response.bytes().unwrap();
             let mut content = bytes.as_ref();
             std::io::copy(&mut content, &mut dest).unwrap();
         }

@@ -7,7 +7,7 @@ use crate::pixiv::request::PixivRequest;
 
 use http::{header, status::StatusCode};
 use md5;
-use reqwest::{Client, ClientBuilder, Response};
+use reqwest::blocking::{Client, ClientBuilder, Response};
 use serde_json::Value;
 
 /// Used to authenticate to the PixivClient servers and construct PixivClient requests through methods creating `PixivRequestBuilder`.
@@ -37,7 +37,7 @@ impl PixivClient {
         })
     }
     /// This is required to use all the other functions this library provides. Requires a valid username and password.
-    pub async fn login<'a, 'b, 'c>(
+    pub fn login<'a, 'b, 'c>(
         &'a mut self,
         username: &'b str,
         password: &'c str,
@@ -54,7 +54,6 @@ impl PixivClient {
 
         let res = self
             .send_auth_request(&data)
-            .await
             .expect("Error occured while requesting token.");
 
         match res.status() {
@@ -68,7 +67,7 @@ impl PixivClient {
         }
 
         // TODO: Figure out the correct struct for this
-        let mut json_response: Value = res.json().await.unwrap();
+        let mut json_response: Value = res.json().unwrap();
 
         self.access_token = match json_response["response"]["access_token"].take() {
             Value::String(s) => s,
@@ -83,7 +82,7 @@ impl PixivClient {
     }
 
     /// Refreshes the authentication. You should use this when your access token is close to expiring.
-    pub async fn refresh_auth(&mut self) -> Result<(), AuthError> {
+    pub fn refresh_auth(&mut self) -> Result<(), AuthError> {
         let refresh_clone = self.refresh_token.clone();
         let mut data = std::collections::HashMap::new();
 
@@ -96,7 +95,6 @@ impl PixivClient {
 
         let res = self
             .send_auth_request(&data)
-            .await
             .expect("Error occured while requesting token.");
 
         match res.status() {
@@ -111,7 +109,7 @@ impl PixivClient {
             }
         }
 
-        let mut json_response: Value = match res.json().await {
+        let mut json_response: Value = match res.json() {
             Ok(json) => json,
             Err(e) => panic!("Failed to parse JSON: {}", e),
         };
@@ -162,7 +160,7 @@ impl PixivClient {
     }
 
     /// Private helper method
-    async fn send_auth_request(
+    fn send_auth_request(
         &self,
         data: &std::collections::HashMap<&str, &str>,
     ) -> Result<Response, reqwest::Error> {
@@ -181,15 +179,11 @@ impl PixivClient {
             .header("content-type", "application/x-www-form-urlencoded")
             .form(&data)
             .send()
-            .await
     }
 
     /// Executes a given `PixivRequest`.
     /// TODO: Add another function that can execute without authentication (is there even anything like this?)
-    pub async fn execute_with_auth(
-        &self,
-        request: PixivRequest,
-    ) -> Result<Response, reqwest::Error> {
+    pub fn execute_with_auth(&self, request: PixivRequest) -> Result<Response, reqwest::Error> {
         let uri = format!("{}", request.url);
         let url = reqwest::Url::parse(&uri).unwrap();
         self.client
@@ -198,15 +192,14 @@ impl PixivClient {
             .form(&request.form)
             .bearer_auth(self.access_token.clone())
             .send()
-            .await
     }
 
     /// Download a given illustration to path
-    pub async fn download_illustration<'a, 'b, 'c>(
+    pub fn download_illustration<'a, 'b, 'c>(
         &'a self,
         illustration: &'c Illustration,
         path: &'b std::path::Path,
     ) {
-        illustration.download(&self.client, &path).await;
+        illustration.download(&self.client, &path);
     }
 }

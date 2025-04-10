@@ -17,8 +17,8 @@ use pixieve_rs::pixiv::result::trending_illustrations::TrendingIllustrations;
 
 const ILLUST_ID_TEST: usize = 75523989;
 
-#[tokio::test]
-async fn test_fetching_illustration() {
+#[test]
+fn test_fetching_illustration() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -26,29 +26,22 @@ async fn test_fetching_illustration() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration(ILLUST_ID_TEST);
 
     let illustration = pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<IllustrationProxy>()
-        .await
         .expect("Failed to parse as json.")
         .into_inner();
 
-    pixiv
-        .download_illustration(&illustration, &std::env::current_dir().unwrap())
-        .await;
+    pixiv.download_illustration(&illustration, &std::env::current_dir().unwrap());
 }
 
-#[tokio::test]
-async fn test_search_illustration() {
+#[test]
+fn test_search_illustration() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -56,10 +49,7 @@ async fn test_search_illustration() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let arg = IllustrationSearchRequestArg::new("Pretty Cure");
 
@@ -67,16 +57,14 @@ async fn test_search_illustration() {
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<IllustrationSearchProxy>()
-        .await
         .expect("Failed to parse as json.");
 }
 
 // TODO: JSON Parse error
-#[tokio::test]
-async fn test_fetch_illustration_comments() {
+#[test]
+fn test_fetch_illustration_comments() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -84,24 +72,19 @@ async fn test_fetch_illustration_comments() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_comments(ILLUST_ID_TEST, 0, false);
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<IllustrationComment>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_related_illustrations() {
+#[test]
+fn test_fetch_related_illustrations() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -109,24 +92,19 @@ async fn test_fetch_related_illustrations() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_related_illustration(ILLUST_ID_TEST, 0);
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<RelatedIllustrationSearchProxy>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_illustrations_by_followed_artists() {
+#[test]
+fn test_fetch_illustrations_by_followed_artists() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -134,24 +112,19 @@ async fn test_fetch_illustrations_by_followed_artists() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_following(true);
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<RelatedIllustrationSearchProxy>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_recommended_illustrations() {
+#[test]
+fn test_fetch_recommended_illustrations() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -159,10 +132,7 @@ async fn test_fetch_recommended_illustrations() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let args = RecommendedIllustrationRequestArg::default();
 
@@ -170,15 +140,13 @@ async fn test_fetch_recommended_illustrations() {
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<RecommendedIllustration>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_illustrations_ranking() {
+#[test]
+fn test_fetch_illustrations_ranking() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -186,10 +154,7 @@ async fn test_fetch_illustrations_ranking() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let args = IllustrationRankingRequestArg::default();
 
@@ -197,15 +162,13 @@ async fn test_fetch_illustrations_ranking() {
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<IllustrationRanking>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_trending_tags() {
+#[test]
+fn test_fetch_trending_tags() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -213,24 +176,19 @@ async fn test_fetch_trending_tags() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_trending_tags();
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<TrendingIllustrations>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_fetch_illustration_bookmark_info() {
+#[test]
+fn test_fetch_illustration_bookmark_info() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -238,24 +196,19 @@ async fn test_fetch_illustration_bookmark_info() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_illustration_bookmark_info(ILLUST_ID_TEST);
 
     pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<IllustBookmarkInfoProxy>()
-        .await
         .expect("Failed to parse as json.");
 }
 
-#[tokio::test]
-async fn test_adding_bookmark() {
+#[test]
+fn test_adding_bookmark() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -263,10 +216,7 @@ async fn test_adding_bookmark() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_adding_bookmark(ILLUST_ID_TEST, Visibility::Public);
 
@@ -274,16 +224,14 @@ async fn test_adding_bookmark() {
 
     let result = pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<serde_json::Value>()
-        .await
         .expect("Failed to parse as json.");
     println!("result:\n{}", result);
 }
 
-#[tokio::test]
-async fn test_delete_bookmark() {
+#[test]
+fn test_delete_bookmark() {
     dotenv::dotenv().ok();
 
     let mut pixiv: PixivClient = PixivClient::new().unwrap();
@@ -291,10 +239,7 @@ async fn test_delete_bookmark() {
     let refresh_token = std::env::var("REFRESH_TOKEN").expect("REFRESH_TOKEN isn't set!");
     *pixiv.refresh_token_mut() = refresh_token;
 
-    pixiv
-        .refresh_auth()
-        .await
-        .expect("Failed to log in.");
+    pixiv.refresh_auth().expect("Failed to log in.");
 
     let request = PixivRequestBuilder::request_delete_bookmark(ILLUST_ID_TEST);
 
@@ -302,10 +247,8 @@ async fn test_delete_bookmark() {
 
     let result = pixiv
         .execute_with_auth(request)
-        .await
         .expect("Request failed.")
         .json::<serde_json::Value>()
-        .await
         .expect("Failed to parse as json.");
 
     println!("result:\n{}", result);
