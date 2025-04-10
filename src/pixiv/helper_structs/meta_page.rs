@@ -6,3 +6,9 @@ use serde::{Deserialize, Serialize};
 pub struct MetaPage {
     image_urls: ImageUrl,
 }
+
+impl MetaPage {
+    pub fn image_urls(&self) -> &ImageUrl {
+        &self.image_urls
+    }
+}
