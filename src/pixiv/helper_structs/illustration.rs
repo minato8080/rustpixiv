@@ -91,4 +91,100 @@ impl Illustration {
             std::io::copy(&mut content, &mut dest).unwrap();
         }
     }
+
+    pub fn get_caption(&self) -> &String {
+        &self.caption
+    }
+
+    pub fn get_create_date(&self) -> &String {
+        &self.create_date
+    }
+
+    pub fn get_height(&self) -> u32 {
+        self.height
+    }
+
+    pub fn get_width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn get_id(&self) -> u32 {
+        self.id
+    }
+
+    pub fn get_image_urls(&self) -> &ImageUrl {
+        &self.image_urls
+    }
+
+    pub fn is_bookmarked(&self) -> bool {
+        self.is_bookmarked
+    }
+
+    pub fn is_muted(&self) -> bool {
+        self.is_muted
+    }
+
+    pub fn get_meta_pages(&self) -> &Vec<MetaPage> {
+        &self.meta_pages
+    }
+
+    pub fn get_meta_single_page(&self) -> Option<&SingleMetaPage> {
+        self.meta_single_page.as_ref()
+    }
+
+    pub fn get_page_count(&self) -> u32 {
+        self.page_count
+    }
+
+    pub fn get_restrict(&self) -> u32 {
+        self.restrict
+    }
+
+    pub fn get_sanity_level(&self) -> u32 {
+        self.sanity_level
+    }
+
+    pub fn get_series(&self) -> Option<&Series> {
+        self.series.as_ref()
+    }
+
+    pub fn get_tags(&self) -> &Vec<Tag> {
+        &self.tags
+    }
+
+    pub fn get_title(&self) -> &String {
+        &self.title
+    }
+
+    pub fn get_tools(&self) -> &Vec<String> {
+        &self.tools
+    }
+
+    pub fn get_total_bookmarks(&self) -> u32 {
+        self.total_bookmarks
+    }
+
+    pub fn get_total_comments(&self) -> Option<u32> {
+        self.total_comments
+    }
+
+    pub fn get_total_view(&self) -> u32 {
+        self.total_view
+    }
+
+    pub fn get_content_type(&self) -> &ContentType {
+        &self.content_type
+    }
+
+    pub fn get_user(&self) -> &User {
+        &self.user
+    }
+
+    pub fn is_visible(&self) -> bool {
+        self.visible
+    }
+
+    pub fn get_x_restrict(&self) -> u32 {
+        self.x_restrict
+    }
 }
