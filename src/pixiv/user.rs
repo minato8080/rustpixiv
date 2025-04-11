@@ -13,11 +13,11 @@ pub struct User {
 }
 
 impl User {
-    pub fn get_account(&self) -> &String {
+    pub fn account(&self) -> &String {
         &self.account
     }
 
-    pub fn get_id(&self) -> u32 {
+    pub fn id(&self) -> u32 {
         self.id
     }
 
@@ -25,11 +25,11 @@ impl User {
         self.is_followed
     }
 
-    pub fn get_name(&self) -> &String {
+    pub fn name(&self) -> &String {
         &self.name
     }
 
-    pub fn get_profile_image_urls(&self) -> &ImageUrl {
+    pub fn profile_image_urls(&self) -> &ImageUrl {
         &self.profile_image_urls
     }
 }

@@ -10,15 +10,15 @@ pub struct IllustrationTag {
 }
 
 impl IllustrationTag {
-    pub fn get_illust(&self) -> &Illustration {
+    pub fn illust(&self) -> &Illustration {
         &self.illust
     }
 
-    pub fn get_tag(&self) -> &String {
+    pub fn tag(&self) -> &String {
         &self.tag
     }
 
-    pub fn get_translate_name(&self) -> &Option<String> {
+    pub fn translate_name(&self) -> &Option<String> {
         &self.translate_name
     }
 }
